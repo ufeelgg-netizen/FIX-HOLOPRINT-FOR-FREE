@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>FIX HOLOPRINT · الإصدار المحترف</title>
-    <!-- تم تغيير الأيقونة إلى الرابط الجديد -->
+    <!-- أيقونة الموقع الجديدة -->
     <link rel="icon" type="image/png" href="https://image2url.com/r2/default/images/1773163753711-12a6b929-9d7b-412f-bfde-a12c7d98698d.png">
     <style>
         * {
@@ -65,7 +65,7 @@
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
             gap: 12px;
             margin-bottom: 15px;
         }
@@ -76,23 +76,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .btn-admin {
-            background: #2563EB;
-            border: 1px solid #38BDF8;
-            color: white;
-            padding: 10px 18px;
-            border-radius: 50px;
-            font-weight: 700;
-            cursor: pointer;
-            border-bottom: 3px solid #1e4bb3;
-            box-shadow: 0 5px 10px rgba(37, 99, 235, 0.5);
-            transition: all 0.2s;
-        }
-        .btn-admin:hover {
-            background: #1e4bb3;
-            transform: translateY(-1px);
-        }
-        .btn-admin:active { transform: translateY(2px); border-bottom-width: 1px; }
         .lock-icon { font-size: 2rem; text-align: center; margin-bottom: 10px; }
         .code-input {
             width: 100%;
@@ -190,77 +173,6 @@
         }
         footer { text-align: center; color: #94A3B8; margin-top: 15px; }
         
-        .admin-panel {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 1000;
-            overflow-y: auto;
-            padding: 20px;
-        }
-        .admin-content {
-            background: #0F172A;
-            border-radius: 40px;
-            padding: 25px 20px;
-            border: 1px solid #2563EB;
-            margin: 20px auto;
-            max-width: 600px;
-        }
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-        .btn-close {
-            background: #2563EB;
-            color: white;
-            border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            font-size: 1.8rem;
-            cursor: pointer;
-        }
-        .code-item {
-            background: #1E293B;
-            border-radius: 30px;
-            padding: 18px;
-            margin-bottom: 15px;
-            border: 1px solid #38BDF8;
-        }
-        .btn-small {
-            padding: 10px 18px;
-            border-radius: 40px;
-            border: none;
-            font-weight: 600;
-            margin: 5px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            transition: 0.2s;
-        }
-        .btn-green { background: #10b981; color: white; }
-        .btn-red { background: #ef4444; color: white; }
-        .btn-blue { background: #2563EB; color: white; }
-        .btn-purple { background: #8b5cf6; color: white; }
-        .btn-orange { background: #f97316; color: white; }
-        .input-admin {
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 40px;
-            border: none;
-            background: #1E293B;
-            color: white;
-            border: 1px solid #2563EB;
-        }
-        .flex-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
         .permanent-lock {
             text-align: center;
             padding: 30px;
@@ -270,24 +182,6 @@
         }
         .permanent-lock h2 { color: #38BDF8; font-size: 2rem; margin-bottom: 20px; }
         .permanent-lock p { color: #E5E7EB; }
-        .copy-message {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #10b981;
-            color: white;
-            padding: 12px 25px;
-            border-radius: 50px;
-            z-index: 2000;
-            animation: fadeInOut 2s ease;
-        }
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            15% { opacity: 1; transform: translateX(-50%) translateY(0); }
-            85% { opacity: 1; }
-            100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
-        }
     </style>
 </head>
 <body>
@@ -297,21 +191,20 @@
                 <div class="logo">
                     <h1>🔧 FIX HOLOPRINT</h1>
                 </div>
-                <button class="btn-admin" onclick="openAdmin()">👑 لوحة الإدارة</button>
             </div>
 
             <div id="lockScreen">
                 <div class="lock-icon">🔒</div>
-                <input type="text" id="codeInput" class="code-input" placeholder="XXXX-XXXX-XXXX" maxlength="15">
+                <input type="text" id="codeInput" class="code-input" placeholder="أدخل كود الفتح" maxlength="20">
                 <button class="btn-primary" id="unlockBtn">فتح القفل</button>
                 <div id="unlockMessage" class="message" style="display: none;"></div>
             </div>
 
             <div id="permanentLockScreen" style="display: none;">
                 <div class="permanent-lock">
-                    <h2>🔒 مغلق نهائياً</h2>
-                    <p>هذا الكود استخدم وانتهى</p>
-                    <p>لا يمكن استخدامه مرة أخرى</p>
+                    <h2>🔒 كود غير صحيح</h2>
+                    <p>الكود الذي أدخلته غير موجود</p>
+                    <p>يرجى التأكد والمحاولة مرة أخرى</p>
                     <div style="margin-top: 30px; font-size: 3rem;">🚫</div>
                 </div>
             </div>
@@ -331,49 +224,123 @@
         </div>
     </div>
 
-    <div id="adminPanel" class="admin-panel">
-        <div class="admin-content">
-            <div class="admin-header">
-                <h2 style="color: #38BDF8;">👑 لوحة التحكم</h2>
-                <button class="btn-close" onclick="closeAdmin()">×</button>
-            </div>
-            <div id="adminLogin">
-                <input type="password" id="adminPass" class="input-admin" placeholder="كلمة المرور">
-                <button class="btn-primary" onclick="checkAdminPass()">دخول</button>
-            </div>
-            <div id="adminContent" style="display: none;">
-                <div style="margin: 20px 0;">
-                    <h3 style="color: #38BDF8; margin-bottom: 15px;">➕ إنشاء كود جديد</h3>
-                    <input type="text" id="newCode" class="input-admin" placeholder="الكود (مثال: XXXX-XXXX-XXXX)">
-                    <select id="codeType" class="input-admin">
-                        <option value="unlimited">غير محدود</option>
-                        <option value="limited">محدود</option>
-                    </select>
-                    <input type="number" id="usesCount" class="input-admin" placeholder="عدد الاستخدامات (للمحدود فقط)" value="5" min="1">
-                    <button class="btn-primary" onclick="createCode()">إنشاء الكود</button>
-                </div>
-                
-                <!-- أزرار تصدير واستيراد الأكواد -->
-                <div style="margin: 20px 0; display: flex; gap: 10px; flex-wrap: wrap;">
-                    <button class="btn-small btn-blue" onclick="exportCodes()" style="flex: 1;">📤 تصدير الأكواد</button>
-                    <button class="btn-small btn-orange" onclick="document.getElementById('importFile').click()" style="flex: 1;">📥 استيراد أكواد</button>
-                    <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importCodes(event)">
-                </div>
-
-                <div style="margin: 20px 0;">
-                    <h3 style="color: #38BDF8; margin-bottom: 15px;">📋 قائمة الأكواد</h3>
-                    <div id="codesList"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script>
-        const ADMIN_PASSWORD = '3alloch';
+        // ==================== الأكواد الثابتة (قابلة للتعديل يدوياً) ====================
+        const CODES_LIST = [
+            {
+                "code": "Hhh",
+                "type": "unlimited",
+                "usesLeft": null,
+                "active": true,
+                "deviceBound": null
+            },
+            {
+                "code": "TEST-123",
+                "type": "limited",
+                "usesLeft": 3,
+                "active": true,
+                "deviceBound": null
+            },
+            {
+                "code": "VIP-2025",
+                "type": "limited",
+                "usesLeft": 1,
+                "active": true,
+                "deviceBound": null
+            }
+        ];
+
+        // مفاتيح التخزين المحلي
         const STORAGE_KEY = 'holoprint_device_id';
-        const CODES_KEY = 'holoprint_codes';
-        const LOCKED_KEY = 'holoprint_permanent_lock';
+        const USAGE_KEY_PREFIX = 'code_usage_';  // لكل كود، سنخزن عدد الاستخدامات المتبقية
+        const LOCKED_KEY = 'holoprint_permanent_lock'; // قفل شامل (إذا انتهى كود محدود نهائياً)
+
+        function getDeviceId() {
+            let deviceId = localStorage.getItem(STORAGE_KEY);
+            if (!deviceId) {
+                deviceId = 'dev_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+                localStorage.setItem(STORAGE_KEY, deviceId);
+            }
+            return deviceId;
+        }
+
+        // تحميل حالة الاستخدامات من localStorage (لكل كود على حدة)
+        function loadUsageForCode(codeObj) {
+            if (codeObj.type !== 'limited') return null; // غير محدود لا يحتاج تخزين
+            const key = USAGE_KEY_PREFIX + codeObj.code;
+            const stored = localStorage.getItem(key);
+            if (stored !== null) {
+                return parseInt(stored, 10);
+            } else {
+                // أول مرة: نستخدم usesLeft الأصلي
+                return codeObj.usesLeft;
+            }
+        }
+
+        // حفظ الاستخدامات المتبقية لكود محدود
+        function saveUsageForCode(codeObj, remainingUses) {
+            if (codeObj.type !== 'limited') return;
+            const key = USAGE_KEY_PREFIX + codeObj.code;
+            localStorage.setItem(key, remainingUses.toString());
+        }
+
+        // دالة التحقق من الكود (تأخذ الكود المدخل وتعيد النتيجة)
+        function validateCode(inputCode) {
+            // التحقق من القفل الدائم (إذا كان هناك كود محدود انتهى نهائياً)
+            if (localStorage.getItem(LOCKED_KEY) === 'true') {
+                return { success: false, message: '🔒 هذا الكود استخدم وانتهى نهائياً', permanentLock: true };
+            }
+
+            const normalizedInput = inputCode.trim().toUpperCase();
+            const deviceId = getDeviceId();
+
+            // البحث عن الكود في القائمة الثابتة
+            const found = CODES_LIST.find(c => c.code.toUpperCase() === normalizedInput && c.active === true);
+            if (!found) {
+                return { success: false, message: '❌ كود غير صالح أو معطل' };
+            }
+
+            // إذا كان الكود مرتبط بجهاز معين
+            if (found.deviceBound && found.deviceBound !== deviceId) {
+                return { success: false, message: '⚠️ هذا الكود مقيد بجهاز آخر' };
+            }
+
+            // إذا كان الكود من نوع limited، نتحقق من الاستخدامات المتبقية
+            if (found.type === 'limited') {
+                const remaining = loadUsageForCode(found);
+                if (remaining <= 0) {
+                    return { success: false, message: '❌ انتهت استخدامات هذا الكود' };
+                }
+                // ربط الجهاز إذا لم يكن مرتبطاً
+                if (!found.deviceBound) {
+                    found.deviceBound = deviceId;
+                }
+                // نمرر الكائن مع الاستخدامات الحالية
+                return { success: true, codeObject: found, remainingUses: remaining, message: '✅ تم الفتح بنجاح' };
+            } else {
+                // unlimited
+                if (!found.deviceBound) {
+                    found.deviceBound = deviceId;
+                }
+                return { success: true, codeObject: found, remainingUses: null, message: '✅ تم الفتح بنجاح' };
+            }
+        }
+
+        // استهلاك استخدام (للمحدود)
+        function consumeUse(codeObj) {
+            if (codeObj.type !== 'limited') return false; // غير محدود لا يستهلك
+            const currentRemaining = loadUsageForCode(codeObj);
+            if (currentRemaining > 0) {
+                const newRemaining = currentRemaining - 1;
+                saveUsageForCode(codeObj, newRemaining);
+                if (newRemaining === 0) {
+                    localStorage.setItem(LOCKED_KEY, 'true'); // قفل دائم لهذا الجهاز
+                    return true; // كان آخر استخدام
+                }
+            }
+            return false;
+        }
 
         function generateFixIconBase64() {
             return new Promise((resolve) => {
@@ -405,90 +372,15 @@
             });
         }
 
-        function getDeviceId() {
-            let deviceId = localStorage.getItem(STORAGE_KEY);
-            if (!deviceId) {
-                deviceId = 'dev_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
-                localStorage.setItem(STORAGE_KEY, deviceId);
-            }
-            return deviceId;
-        }
-
-        function getDefaultCodes() {
-            return [
-                { code: 'ABCD-1234-5678', type: 'unlimited', usesLeft: null, active: true, deviceBound: null },
-                { code: 'LIMIT-5TEST-0001', type: 'limited', usesLeft: 5, active: true, deviceBound: null },
-                { code: 'ADMIN-3ALLOCH-XX', type: 'limited', usesLeft: 2, active: true, deviceBound: null },
-                { code: 'SINGLE-USE-001', type: 'limited', usesLeft: 1, active: true, deviceBound: null }
-            ];
-        }
-
-        function loadCodes() {
-            const stored = localStorage.getItem(CODES_KEY);
-            if (stored) {
-                try { return JSON.parse(stored); } 
-                catch { return getDefaultCodes(); }
-            } else {
-                localStorage.setItem(CODES_KEY, JSON.stringify(getDefaultCodes()));
-                return getDefaultCodes();
-            }
-        }
-
-        function saveCodes(codes) {
-            localStorage.setItem(CODES_KEY, JSON.stringify(codes));
-        }
-
-        function isPermanentlyLocked() {
-            return localStorage.getItem(LOCKED_KEY) === 'true';
-        }
-
-        function setPermanentLock() {
-            localStorage.setItem(LOCKED_KEY, 'true');
-        }
-
-        function validateCode(inputCode) {
-            if (isPermanentlyLocked()) {
-                return { success: false, message: '🔒 هذا الكود استخدم وانتهى نهائياً', permanentLock: true };
-            }
-            const codes = loadCodes();
-            const deviceId = getDeviceId();
-            const normalizedInput = inputCode.trim().toUpperCase();
-            const found = codes.find(c => c.code.toUpperCase() === normalizedInput && c.active === true);
-            if (!found) return { success: false, message: '❌ كود غير صالح أو معطل' };
-            if (found.deviceBound && found.deviceBound !== deviceId) {
-                return { success: false, message: '⚠️ هذا الكود مقيد بجهاز آخر' };
-            }
-            if (!found.deviceBound) {
-                found.deviceBound = deviceId;
-                saveCodes(codes);
-            }
-            if (found.type === 'limited' && found.usesLeft <= 0) {
-                return { success: false, message: '❌ انتهت استخدامات هذا الكود' };
-            }
-            return { success: true, codeObject: found, message: '✅ تم الفتح بنجاح' };
-        }
-
-        function consumeUse(codeObj) {
-            if (codeObj.type === 'limited' && codeObj.usesLeft > 0) {
-                codeObj.usesLeft -= 1;
-                const wasLastUse = (codeObj.usesLeft === 0);
-                const codes = loadCodes();
-                const updated = codes.map(c => c.code === codeObj.code ? codeObj : c);
-                saveCodes(updated);
-                if (wasLastUse) {
-                    setPermanentLock();
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        let currentCode = null;
+        let currentCodeObject = null;
+        let currentRemainingUses = null;
 
         window.addEventListener('load', function() {
-            if (isPermanentlyLocked()) {
+            if (localStorage.getItem(LOCKED_KEY) === 'true') {
                 document.getElementById('lockScreen').style.display = 'none';
                 document.getElementById('permanentLockScreen').style.display = 'block';
+                document.querySelector('.permanent-lock h2').innerText = '🔒 مغلق نهائياً';
+                document.querySelector('.permanent-lock p').innerHTML = 'هذا الكود استخدم وانتهى<br>لا يمكن استخدامه مرة أخرى';
             }
         });
 
@@ -498,13 +390,29 @@
             const msgDiv = document.getElementById('unlockMessage');
             msgDiv.style.display = 'block';
             msgDiv.innerText = result.message;
+
             if (result.success) {
-                currentCode = result.codeObject;
+                currentCodeObject = result.codeObject;
+                currentRemainingUses = result.remainingUses;
                 document.getElementById('lockScreen').style.display = 'none';
                 document.getElementById('processScreen').style.display = 'block';
             } else if (result.permanentLock) {
                 document.getElementById('lockScreen').style.display = 'none';
                 document.getElementById('permanentLockScreen').style.display = 'block';
+                document.querySelector('.permanent-lock h2').innerText = '🔒 مغلق نهائياً';
+                document.querySelector('.permanent-lock p').innerHTML = 'هذا الكود استخدم وانتهى<br>لا يمكن استخدامه مرة أخرى';
+            } else {
+                // كود غير صحيح: نعرض رسالة الخطأ مؤقتاً ثم نعود
+                document.getElementById('lockScreen').style.display = 'none';
+                document.getElementById('permanentLockScreen').style.display = 'block';
+                document.querySelector('.permanent-lock h2').innerText = '❌ كود خاطئ';
+                document.querySelector('.permanent-lock p').innerHTML = 'الكود الذي أدخلته غير صحيح<br>سيتم إعادة التوجيه بعد 3 ثوانٍ';
+                setTimeout(() => {
+                    document.getElementById('permanentLockScreen').style.display = 'none';
+                    document.getElementById('lockScreen').style.display = 'block';
+                    document.getElementById('codeInput').value = '';
+                    msgDiv.style.display = 'none';
+                }, 3000);
             }
         });
 
@@ -549,7 +457,7 @@
         }
 
         processBtn.addEventListener('click', async function() {
-            if (!currentCode) {
+            if (!currentCodeObject) {
                 alert('الرجاء فتح القفل أولاً');
                 return;
             }
@@ -567,6 +475,7 @@
 
                 let changesMade = [];
 
+                // تعديل armor_stand.entity.json
                 let modified = false;
                 for (let filename in zipData.files) {
                     if (filename.includes('armor_stand.entity.json')) {
@@ -589,6 +498,7 @@
                     changesMade.push('⚠️ لم يتم العثور على ملف armor_stand.entity.json داخل الحزمة');
                 }
 
+                // تعديل manifest.json
                 for (let filename in zipData.files) {
                     if (filename.includes('manifest.json')) {
                         const file = zipData.files[filename];
@@ -611,6 +521,7 @@
                     }
                 }
 
+                // استبدال الصورة بصورة FIX
                 processMessage.innerText = '⏳ جاري إنشاء صورة FIX...';
                 const iconBase64 = await generateFixIconBase64();
                 if (iconBase64) {
@@ -628,6 +539,7 @@
                     changesMade.push('✅ تم استبدال صورة الحزمة');
                 }
 
+                // إنشاء الملف الجديد
                 const newZip = await zipData.generateAsync({ type: 'blob' });
                 const originalName = selectedFile.name;
                 const baseName = originalName.replace(/\.mcpack$|\.zip$/i, '');
@@ -635,16 +547,18 @@
 
                 handleDownload(newZip, newName);
 
-                const wasLastUse = consumeUse(currentCode);
-                
+                // استهلاك استخدام للكود إذا كان محدوداً
+                const wasLastUse = consumeUse(currentCodeObject);
+
                 let resultMessage = changesMade.join('\n') + '\n\n';
-                
                 if (wasLastUse) {
                     resultMessage += '✅ تمت المعالجة! هذا كان آخر استخدام للكود. سيتم إغلاق الموقع.';
                     processMessage.innerText = resultMessage;
                     setTimeout(() => {
                         document.getElementById('processScreen').style.display = 'none';
                         document.getElementById('permanentLockScreen').style.display = 'block';
+                        document.querySelector('.permanent-lock h2').innerText = '🔒 مغلق نهائياً';
+                        document.querySelector('.permanent-lock p').innerHTML = 'هذا الكود استخدم وانتهى<br>لا يمكن استخدامه مرة أخرى';
                     }, 5000);
                 } else {
                     resultMessage += '✅ تمت المعالجة بنجاح! تم تحميل الملف المعدل.';
@@ -656,196 +570,6 @@
                 processMessage.innerText = `❌ خطأ: ${err.message}\n\nتفاصيل إضافية في وحدة التحكم (F12 > Console)`;
             }
         });
-
-        // ==================== لوحة الإدارة ====================
-        function openAdmin() {
-            document.getElementById('adminPanel').style.display = 'block';
-            document.getElementById('adminLogin').style.display = 'block';
-            document.getElementById('adminContent').style.display = 'none';
-        }
-
-        function closeAdmin() {
-            document.getElementById('adminPanel').style.display = 'none';
-        }
-
-        function checkAdminPass() {
-            const pass = document.getElementById('adminPass').value;
-            if (pass === ADMIN_PASSWORD) {
-                document.getElementById('adminLogin').style.display = 'none';
-                document.getElementById('adminContent').style.display = 'block';
-                refreshCodesList();
-            } else {
-                alert('❌ كلمة مرور خاطئة');
-            }
-        }
-
-        function copyToClipboard(text) {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(text).then(() => {
-                    showCopyMessage(text);
-                }).catch(err => {
-                    fallbackCopy(text);
-                });
-            } else {
-                fallbackCopy(text);
-            }
-        }
-
-        function fallbackCopy(text) {
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            textarea.style.position = 'fixed';
-            textarea.style.opacity = '0';
-            document.body.appendChild(textarea);
-            textarea.focus();
-            textarea.select();
-            try {
-                document.execCommand('copy');
-                showCopyMessage(text);
-            } catch (err) {
-                alert('تعذر النسخ، يمكنك نسخ النص يدويًا: ' + text);
-            }
-            document.body.removeChild(textarea);
-        }
-
-        function showCopyMessage(text) {
-            const msgDiv = document.createElement('div');
-            msgDiv.className = 'copy-message';
-            msgDiv.innerText = `✅ تم نسخ: ${text}`;
-            document.body.appendChild(msgDiv);
-            setTimeout(() => msgDiv.remove(), 2000);
-        }
-
-        // دالة تصدير الأكواد إلى ملف JSON
-        function exportCodes() {
-            const codes = loadCodes();
-            const dataStr = JSON.stringify(codes, null, 2);
-            const blob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'holoprint_codes.json';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            alert('✅ تم تصدير الأكواد بنجاح');
-        }
-
-        // دالة استيراد الأكواد من ملف JSON
-        function importCodes(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const importedCodes = JSON.parse(e.target.result);
-                    if (!Array.isArray(importedCodes)) {
-                        throw new Error('الملف لا يحتوي على مصفوفة أكواد صالحة');
-                    }
-                    
-                    const currentCodes = loadCodes();
-                    
-                    // دمج الأكواد المستوردة مع الحالية (تجنب التكرار بناءً على code)
-                    const mergedCodes = [...currentCodes];
-                    importedCodes.forEach(importedCode => {
-                        const exists = mergedCodes.some(c => c.code === importedCode.code);
-                        if (!exists) {
-                            mergedCodes.push(importedCode);
-                        }
-                    });
-                    
-                    if (confirm('سيتم دمج الأكواد المستوردة مع الموجودة. هل تريد المتابعة؟')) {
-                        saveCodes(mergedCodes);
-                        refreshCodesList();
-                        alert('✅ تم استيراد الأكواد بنجاح');
-                    }
-                } catch (error) {
-                    alert('❌ خطأ في قراءة الملف: ' + error.message);
-                }
-                // إعادة تعيين حقل الملف لتمكين اختيار نفس الملف مرة أخرى
-                event.target.value = '';
-            };
-            reader.readAsText(file);
-        }
-
-        function refreshCodesList() {
-            const codes = loadCodes();
-            const listDiv = document.getElementById('codesList');
-            listDiv.innerHTML = '';
-            codes.forEach((code) => {
-                const div = document.createElement('div');
-                div.className = 'code-item';
-                div.innerHTML = `
-                    <div style="font-size: 1.2rem; color: #38BDF8; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-                        <span>${code.code}</span>
-                        <button class="btn-small btn-purple" onclick="copyToClipboard('${code.code}')" style="margin: 0;">📋 نسخ</button>
-                    </div>
-                    <div>النوع: ${code.type === 'unlimited' ? 'غير محدود' : 'محدود'}</div>
-                    <div>الاستخدامات: ${code.usesLeft !== null ? code.usesLeft : '∞'}</div>
-                    <div>الحالة: ${code.active ? '✅ نشط' : '❌ معطل'}</div>
-                    <div>الجهاز: ${code.deviceBound ? 'مرتبط' : 'غير مرتبط'}</div>
-                    <div class="flex-row" style="margin-top: 10px;">
-                        <button class="btn-small btn-green" onclick="toggleCode('${code.code}')">${code.active ? 'تعطيل' : 'تفعيل'}</button>
-                        ${code.type === 'limited' ? `<button class="btn-small btn-blue" onclick="resetUses('${code.code}')">إعادة تعيين</button>` : ''}
-                        <button class="btn-small btn-red" onclick="deleteCode('${code.code}')">🗑️ حذف</button>
-                    </div>
-                `;
-                listDiv.appendChild(div);
-            });
-        }
-
-        function createCode() {
-            const newCode = document.getElementById('newCode').value;
-            const type = document.getElementById('codeType').value;
-            const uses = document.getElementById('usesCount').value;
-            if (!newCode) { alert('الرجاء إدخال الكود'); return; }
-            const codes = loadCodes();
-            if (codes.find(c => c.code === newCode)) { alert('هذا الكود موجود مسبقاً'); return; }
-            codes.push({
-                code: newCode,
-                type: type,
-                usesLeft: type === 'limited' ? parseInt(uses) : null,
-                active: true,
-                deviceBound: null
-            });
-            saveCodes(codes);
-            refreshCodesList();
-            document.getElementById('newCode').value = '';
-            document.getElementById('usesCount').value = '5';
-        }
-
-        function toggleCode(codeStr) {
-            if (confirm('تغيير حالة الكود؟')) {
-                const codes = loadCodes();
-                const code = codes.find(c => c.code === codeStr);
-                if (code) { code.active = !code.active; saveCodes(codes); refreshCodesList(); }
-            }
-        }
-
-        function resetUses(codeStr) {
-            const newUses = prompt('أدخل عدد الاستخدامات الجديد:');
-            if (newUses !== null) {
-                const codes = loadCodes();
-                const code = codes.find(c => c.code === codeStr);
-                if (code && code.type === 'limited') {
-                    code.usesLeft = parseInt(newUses);
-                    saveCodes(codes);
-                    refreshCodesList();
-                }
-            }
-        }
-
-        function deleteCode(codeStr) {
-            if (confirm('⚠️ هل أنت متأكد من حذف هذا الكود؟')) {
-                const codes = loadCodes();
-                const newCodes = codes.filter(c => c.code !== codeStr);
-                saveCodes(newCodes);
-                refreshCodesList();
-                alert('✅ تم حذف الكود بنجاح');
-            }
-        }
     </script>
 </body>
 </html>

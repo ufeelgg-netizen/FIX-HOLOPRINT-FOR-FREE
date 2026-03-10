@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>FIX HOLOPRINT </title>
+    <link rel="icon" type="image/png" href="https://image2url.com/r2/default/images/1773140124717-bd324b31-a0ce-4623-ac3a-7191cc2afba1.png">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0b1a1f 0%, #1a2f38 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 12px;
+            margin: 0;
+            direction: rtl;
+        }
+
+        /* الحاوية الرئيسية */
+        .container {
+            width: 100%;
+            max-width: 560px;
+            margin: 15px auto;
+        }
+
+        /* البطاقات */
+        .card {
+            background: rgba(18, 30, 36, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid #2f525e;
+            border-radius: 35px;
+            padding: 22px 18px;
+            margin-bottom: 18px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            transition: all 0.3s ease;
+        }
+
+        /* الهيدر */
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .logo h1 {
+            font-size: 1.7rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a3d8f0, #6fc3df);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-admin {
+            background: #b12a5e;
+            border: 1px solid #ff6b9d;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            border-bottom: 3px solid #771f41;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-admin:active {
+            transform: translateY(2px);
+            border-bottom-width: 1px;
+        }
+
+        /* شاشة القفل */
+        .lock-icon {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .code-input {
+            width: 100%;
+            background: #1c353f;
+            border: 2px solid #3f6978;
+            padding: 18px 20px;
+            border-radius: 60px;
+            font-size: 1.2rem;
+            color: white;
+            text-align: center;
+            letter-spacing: 3px;
+            font-weight: 500;
+            outline: none;
+            margin: 15px 0;
+        }
+
+        .code-input::placeholder {
+            color: #5a7f8b;
+            letter-spacing: normal;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: #2f7e8c;
+            border: none;
+            color: white;
+            font-weight: bold;
+            padding: 18px 20px;
+            border-radius: 60px;
+            font-size: 1.3rem;
+            cursor: pointer;
+            border-bottom: 4px solid #1b515c;
+            transition: 0.1s;
+            box-shadow: 0 8px 15px black;
+            margin: 10px 0;
+        }
+
+        .btn-primary:active {
+            transform: translateY(2px);
+            border-bottom-width: 2px;
+        }
+
+        /* منطقة رفع الملف */
+        .file-area {
+            background: #0a1a20;
+            border-radius: 30px;
+            padding: 18px;
+            border: 2px dashed #3f7483;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .file-label {
+            background: #1e4450;
+            padding: 16px 25px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            display: inline-block;
+            cursor: pointer;
+            border: 1px solid #4f8b9c;
+            width: 100%;
+            font-size: 1.1rem;
+        }
+
+        .badge {
+            background: #1f4757;
+            color: #c5e9f2;
+            padding: 12px 16px;
+            border-radius: 50px;
+            font-size: 1rem;
+            margin: 10px 0;
+            display: block;
+            word-break: break-word;
+        }
+
+        /* حقل إدخال الرابط */
+        .url-input {
+            width: 100%;
+            background: #1c353f;
+            border: 2px solid #3f6978;
+            padding: 16px 20px;
+            border-radius: 60px;
+            font-size: 1rem;
+            color: white;
+            margin: 10px 0;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .url-input::placeholder {
+            color: #5a7f8b;
+            text-align: right;
+            direction: rtl;
+        }
+
+        /* الرسائل */
+        .message {
+            background: #0d282f;
+            padding: 18px;
+            border-radius: 30px;
+            margin-top: 15px;
+            color: #bbdef5;
+            border: 1px solid #256073;
+            white-space: pre-wrap;
+            font-size: 1rem;
+        }
+
+        /* رابط الديسكورد */
+        .discord-link {
+            display: block;
+            background: #5865F2;
+            padding: 16px 20px;
+            border-radius: 60px;
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            border: 1px solid #7983f0;
+            text-align: center;
+            font-size: 1.2rem;
+            margin: 15px 0;
+        }
+
+        /* تذييل */
+        footer {
+            text-align: center;
+            color: #4d7987;
+            margin-top: 15px;
+            font-size: 1rem;
+        }
+
+        /* شاشة الإدارة */
+        .admin-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .admin-content {
+            background: #13242b;
+            border-radius: 40px;
+            padding: 25px 20px;
+            border: 1px solid #2f636f;
+            margin: 20px auto;
+            max-width: 600px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .btn-close {
+            background: #c0392b;
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .code-item {
+            background: #1c3a44;
+            border-radius: 30px;
+            padding: 18px;
+            margin-bottom: 15px;
+            border: 1px solid #3e7b8a;
+        }
+
+        .btn-small {
+            padding: 10px 18px;
+            border-radius: 40px;
+            border: none;
+            font-weight: 600;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-green {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-red {
+            background: #c0392b;
+            color: white;
+        }
+
+        .btn-blue {
+            background: #2980b9;
+            color: white;
+        }
+
+        .btn-orange {
+            background: #e67e22;
+            color: white;
+        }
+
+        .input-admin {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 40px;
+            border: none;
+            background: #1f424d;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .flex-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- البطاقة الرئيسية -->
+        <div class="card">
+            <div class="header">
+                <div class="logo">
+                    <h1>🔧 FIX HOLOPRINT</h1>
+                </div>
+                <button class="btn-admin" onclick="openAdmin()">👑 لوحة الإدارة</button>
+            </div>
+
+            <!-- شاشة القفل -->
+            <div id="lockScreen">
+                <div class="lock-icon">🔒</div>
+                <input type="text" id="codeInput" class="code-input" placeholder="XXXX-XXXX-XXXX" maxlength="15">
+                <button class="btn-primary" id="unlockBtn">فتح القفل</button>
+                <div id="unlockMessage" class="message" style="display: none;"></div>
+            </div>
+
+            <!-- شاشة المعالجة (مخفية في البداية) -->
+            <div id="processScreen" style="display: none;">
+                <div class="file-area">
+                    <input type="file" id="packFile" accept=".mcpack,.zip" style="display: none;">
+                    <button class="file-label" onclick="document.getElementById('packFile').click()">📦 اختيار ملف .mcpack أو .zip</button>
+                    <div id="fileName" class="badge">لم يتم اختيار ملف</div>
+                    
+                    <!-- حقل إدخال رابط الصورة -->
+                    <input type="url" id="iconUrl" class="url-input" placeholder="🔗 رابط الصورة الجديدة (اختياري)">
+                    <div class="badge" style="background: #123138;">إذا تركت الرابط فارغاً، ستستخدم الصورة الافتراضية</div>
+                </div>
+
+                <button class="btn-primary" id="processBtn">🔧 معالجة وإصلاح الملف</button>
+                <div id="processMessage" class="message"></div>
+            </div>
+
+            <a href="https://discord.gg/txS89MEA" target="_blank" class="discord-link">💬 دعم فني عبر Discord</a>
+            <footer>تم التطوير بواسطة alloch · الإصدار 2.0</footer>
+        </div>
+    </div>
+
+    <!-- لوحة الإدارة -->
+    <div id="adminPanel" class="admin-panel">
+        <div class="admin-content">
+            <div class="admin-header">
+                <h2 style="color: #b3e5f0;">👑 لوحة التحكم</h2>
+                <button class="btn-close" onclick="closeAdmin()">×</button>
+            </div>
+
+            <!-- كلمة المرور -->
+            <div id="adminLogin">
+                <input type="password" id="adminPass" class="input-admin" placeholder="كلمة المرور">
+                <button class="btn-primary" onclick="checkAdminPass()">دخول</button>
+            </div>
+
+            <!-- محتوى الإدارة (مخفي حتى تسجيل الدخول) -->
+            <div id="adminContent" style="display: none;">
+                <div style="margin: 20px 0;">
+                    <h3 style="color: #a3d8f0; margin-bottom: 15px;">➕ إنشاء كود جديد</h3>
+                    <input type="text" id="newCode" class="input-admin" placeholder="الكود (مثال: XXXX-XXXX-XXXX)">
+                    <select id="codeType" class="input-admin">
+                        <option value="unlimited">غير محدود</option>
+                        <option value="limited">محدود</option>
+                    </select>
+                    <input type="number" id="usesCount" class="input-admin" placeholder="عدد الاستخدامات (للمحدود فقط)" value="5">
+                    <button class="btn-primary" onclick="createCode()">إنشاء الكود</button>
+                </div>
+
+                <div style="margin: 20px 0;">
+                    <h3 style="color: #a3d8f0; margin-bottom: 15px;">📋 قائمة الأكواد</h3>
+                    <div id="codesList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script>
+        // ==================== الإعدادات الأساسية ====================
+        const ADMIN_PASSWORD = '3alloch';
+        const STORAGE_KEY = 'holoprint_device_id';
+        const CODES_KEY = 'holoprint_codes';
+
+        // الصورة الافتراضية المدمجة (1x1 بكسل شفاف)
+        const DEFAULT_ICON_BASE64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
+
+        // ==================== دالة المساعدة ====================
+        function getDeviceId() {
+            let deviceId = localStorage.getItem(STORAGE_KEY);
+            if (!deviceId) {
+                deviceId = 'dev_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+                localStorage.setItem(STORAGE_KEY, deviceId);
+            }
+            return deviceId;
+        }
+
+        // الأكواد الافتراضية
+        function getDefaultCodes() {
+            return [
+                { code: 'ABCD-1234-5678', type: 'unlimited', usesLeft: null, active: true, deviceBound: null },
+                { code: 'LIMIT-5TEST-0001', type: 'limited', usesLeft: 5, active: true, deviceBound: null },
+                { code: 'ADMIN-3ALLOCH-XX', type: 'limited', usesLeft: 2, active: true, deviceBound: null }
+            ];
+        }
+
+        function loadCodes() {
+            const stored = localStorage.getItem(CODES_KEY);
+            if (stored) {
+                try { return JSON.parse(stored); } 
+                catch { return getDefaultCodes(); }
+            } else {
+                localStorage.setItem(CODES_KEY, JSON.stringify(getDefaultCodes()));
+                return getDefaultCodes();
+            }
+        }
+
+        function saveCodes(codes) {
+            localStorage.setItem(CODES_KEY, JSON.stringify(codes));
+        }
+
+        // ==================== التحقق من الكود ====================
+        function validateCode(inputCode) {
+            const codes = loadCodes();
+            const deviceId = getDeviceId();
+            const normalizedInput = inputCode.trim().toUpperCase();
+
+            const found = codes.find(c => c.code.toUpperCase() === normalizedInput && c.active === true);
+            if (!found) return { success: false, message: '❌ كود غير صالح أو معطل' };
+
+            if (found.deviceBound && found.deviceBound !== deviceId) {
+                return { success: false, message: '⚠️ هذا الكود مقيد بجهاز آخر' };
+            }
+
+            if (!found.deviceBound) {
+                found.deviceBound = deviceId;
+                saveCodes(codes);
+            }
+
+            if (found.type === 'limited' && found.usesLeft <= 0) {
+                return { success: false, message: '❌ انتهت استخدامات هذا الكود' };
+            }
+
+            return { success: true, codeObject: found, message: '✅ تم الفتح بنجاح' };
+        }
+
+        function consumeUse(codeObj) {
+            if (codeObj.type === 'limited' && codeObj.usesLeft > 0) {
+                codeObj.usesLeft -= 1;
+                const codes = loadCodes();
+                const updated = codes.map(c => c.code === codeObj.code ? codeObj : c);
+                saveCodes(updated);
+            }
+        }
+
+        // ==================== دالة جلب الصورة من الرابط ====================
+        async function fetchImageFromUrl(url) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('فشل تحميل الصورة');
+                const blob = await response.blob();
+                
+                // التحقق من أن الملف صورة
+                if (!blob.type.startsWith('image/')) {
+                    throw new Error('الرابط لا يشير إلى صورة صالحة');
+                }
+                
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result.split(',')[1]); // نرجع الـ Base64 بدون الـ prefix
+                    reader.onerror = reject;
+                    reader.readAsDataURL(blob);
+                });
+            } catch (error) {
+                console.error('خطأ في تحميل الصورة:', error);
+                return null;
+            }
+        }
+
+        // ==================== واجهة القفل ====================
+        let currentCode = null;
+
+        document.getElementById('unlockBtn').addEventListener('click', function() {
+            const code = document.getElementById('codeInput').value;
+            const result = validateCode(code);
+            const msgDiv = document.getElementById('unlockMessage');
+            
+            msgDiv.style.display = 'block';
+            msgDiv.innerText = result.message;
+
+            if (result.success) {
+                currentCode = result.codeObject;
+                document.getElementById('lockScreen').style.display = 'none';
+                document.getElementById('processScreen').style.display = 'block';
+            }
+        });
+
+        // ==================== معالجة الملف ====================
+        const packFile = document.getElementById('packFile');
+        const fileNameSpan = document.getElementById('fileName');
+        const processBtn = document.getElementById('processBtn');
+        const processMessage = document.getElementById('processMessage');
+        const iconUrlInput = document.getElementById('iconUrl');
+
+        let selectedFile = null;
+
+        packFile.addEventListener('change', function(e) {
+            if (e.target.files[0]) {
+                selectedFile = e.target.files[0];
+                fileNameSpan.innerText = `📁 ${selectedFile.name}`;
+            }
+        });
+
+        processBtn.addEventListener('click', async function() {
+            if (!currentCode) {
+                alert('الرجاء فتح القفل أولاً');
+                return;
+            }
+
+            if (!selectedFile) {
+                processMessage.innerText = '❌ لم تختر ملف';
+                return;
+            }
+
+            processMessage.innerText = '⏳ جاري المعالجة...';
+
+            try {
+                const JSZip = window.JSZip;
+                const zip = new JSZip();
+                const content = await selectedFile.arrayBuffer();
+                const zipData = await zip.loadAsync(content);
+
+                // البحث عن ملف armor_stand.entity.json
+                let targetPath = null;
+                zipData.forEach((path, file) => {
+                    if (!file.dir && path.endsWith('armor_stand.entity.json')) {
+                        targetPath = path;
+                    }
+                });
+
+                if (!targetPath) {
+                    processMessage.innerText = '❌ لم يتم العثور على armor_stand.entity.json';
+                    return;
+                }
+
+                // تعديل الملف
+                let fileContent = await zipData.file(targetPath).async('string');
+                fileContent = fileContent.replace(/"default"\s*:\s*"armor_stand"/g, '"default":"leash_knot"');
+                fileContent = fileContent.replace(/"identifier"\s*:\s*"minecraft:armor_stand"/g, '"identifier":"minecraft:leash_knot"');
+                zipData.file(targetPath, fileContent);
+
+                // تعديل manifest.json
+                const manifest = zipData.file('manifest.json');
+                if (manifest) {
+                    let manifestContent = await manifest.async('string');
+                    manifestContent = manifestContent.replace(/"name"\s*:\s*"Kelp Farm \(1\)"/g, '"name":"Kelp Farm (1) §4§l)fixed"');
+                    zipData.file('manifest.json', manifestContent);
+                }
+
+                // استبدال الصورة
+                zipData.remove('pack_icon.png');
+                
+                let iconBase64 = DEFAULT_ICON_BASE64; // نبدأ بالصورة الافتراضية
+                
+                // إذا أدخل المستخدم رابط، نحاول تحميل الصورة منه
+                const imageUrl = iconUrlInput.value.trim();
+                if (imageUrl) {
+                    processMessage.innerText = '⏳ جاري تحميل الصورة من الرابط...';
+                    const fetchedIcon = await fetchImageFromUrl(imageUrl);
+                    if (fetchedIcon) {
+                        iconBase64 = fetchedIcon;
+                    } else {
+                        processMessage.innerText += '\n⚠️ فشل تحميل الصورة من الرابط، سيتم استخدام الصورة الافتراضية.';
+                    }
+                }
+
+                // تحويل الـ Base64 إلى ArrayBuffer
+                const iconData = atob(iconBase64);
+                const iconArray = new Uint8Array(iconData.length);
+                for (let i = 0; i < iconData.length; i++) {
+                    iconArray[i] = iconData.charCodeAt(i);
+                }
+                zipData.file('pack_icon.png', iconArray);
+
+                // إنشاء الملف الجديد
+                const newZip = await zipData.generateAsync({ type: 'blob' });
+                const originalName = selectedFile.name;
+                const baseName = originalName.replace(/\.mcpack$|\.zip$/i, '');
+                const newName = `${baseName}_fixed§4§l.mcpack`;
+
+                // تحميل الملف
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(newZip);
+                link.download = newName;
+                link.click();
+                URL.revokeObjectURL(link.href);
+
+                // خصم استخدام
+                consumeUse(currentCode);
+                
+                processMessage.innerText = '✅ تمت المعالجة بنجاح! تم تحميل الملف المعدل.';
+            } catch (err) {
+                processMessage.innerText = `❌ خطأ: ${err.message}`;
+            }
+        });
+
+        // ==================== لوحة الإدارة ====================
+        function openAdmin() {
+            document.getElementById('adminPanel').style.display = 'block';
+            document.getElementById('adminLogin').style.display = 'block';
+            document.getElementById('adminContent').style.display = 'none';
+        }
+
+        function closeAdmin() {
+            document.getElementById('adminPanel').style.display = 'none';
+        }
+
+        function checkAdminPass() {
+            const pass = document.getElementById('adminPass').value;
+            if (pass === ADMIN_PASSWORD) {
+                document.getElementById('adminLogin').style.display = 'none';
+                document.getElementById('adminContent').style.display = 'block';
+                refreshCodesList();
+            } else {
+                alert('❌ كلمة مرور خاطئة');
+            }
+        }
+
+        function refreshCodesList() {
+            const codes = loadCodes();
+            const listDiv = document.getElementById('codesList');
+            listDiv.innerHTML = '';
+
+            codes.forEach((code) => {
+                const div = document.createElement('div');
+                div.className = 'code-item';
+                div.innerHTML = `
+                    <div style="font-size: 1.2rem; color: #b3e5f0; margin-bottom: 10px;">${code.code}</div>
+                    <div>النوع: ${code.type === 'unlimited' ? 'غير محدود' : 'محدود'}</div>
+                    <div>الاستخدامات: ${code.usesLeft !== null ? code.usesLeft : '∞'}</div>
+                    <div>الحالة: ${code.active ? '✅ نشط' : '❌ معطل'}</div>
+                    <div>الجهاز: ${code.deviceBound ? 'مرتبط' : 'غير مرتبط'}</div>
+                    <div class="flex-row" style="margin-top: 10px;">
+                        <button class="btn-small btn-green" onclick="toggleCode('${code.code}')">
+                            ${code.active ? 'تعطيل' : 'تفعيل'}
+                        </button>
+                        ${code.type === 'limited' ? 
+                            `<button class="btn-small btn-blue" onclick="resetUses('${code.code}')">
+                                إعادة تعيين
+                            </button>` : ''
+                        }
+                        <button class="btn-small btn-red" onclick="deleteCode('${code.code}')">
+                            🗑️ حذف
+                        </button>
+                    </div>
+                `;
+                listDiv.appendChild(div);
+            });
+        }
+
+        function createCode() {
+            const newCode = document.getElementById('newCode').value;
+            const type = document.getElementById('codeType').value;
+            const uses = document.getElementById('usesCount').value;
+
+            if (!newCode) {
+                alert('الرجاء إدخال الكود');
+                return;
+            }
+
+            const codes = loadCodes();
+            
+            // التحقق من عدم وجود الكود مسبقاً
+            if (codes.find(c => c.code === newCode)) {
+                alert('هذا الكود موجود مسبقاً');
+                return;
+            }
+
+            codes.push({
+                code: newCode,
+                type: type,
+                usesLeft: type === 'limited' ? parseInt(uses) : null,
+                active: true,
+                deviceBound: null
+            });
+
+            saveCodes(codes);
+            refreshCodesList();
+            document.getElementById('newCode').value = '';
+            document.getElementById('usesCount').value = '5';
+        }
+
+        function toggleCode(codeStr) {
+            if (confirm('تغيير حالة الكود؟')) {
+                const codes = loadCodes();
+                const code = codes.find(c => c.code === codeStr);
+                if (code) {
+                    code.active = !code.active;
+                    saveCodes(codes);
+                    refreshCodesList();
+                }
+            }
+        }
+
+        function resetUses(codeStr) {
+            const newUses = prompt('أدخل عدد الاستخدامات الجديد:');
+            if (newUses !== null) {
+                const codes = loadCodes();
+                const code = codes.find(c => c.code === codeStr);
+                if (code && code.type === 'limited') {
+                    code.usesLeft = parseInt(newUses);
+                    saveCodes(codes);
+                    refreshCodesList();
+                }
+            }
+        }
+
+        // ==================== دالة الحذف الجديدة ====================
+        function deleteCode(codeStr) {
+            if (confirm('⚠️ هل أنت متأكد من حذف هذا الكود؟')) {
+                const codes = loadCodes();
+                const newCodes = codes.filter(c => c.code !== codeStr);
+                saveCodes(newCodes);
+                refreshCodesList();
+                alert('✅ تم حذف الكود بنجاح');
+            }
+        }
+    </script>
+</body>
+</html>

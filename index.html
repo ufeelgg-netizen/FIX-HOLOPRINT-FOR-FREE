@@ -25,7 +25,6 @@
             position: relative;
             overflow-x: hidden;
         }
-        /* خلفية بنقاط متحركة */
         body::before {
             content: "";
             position: fixed;
@@ -65,7 +64,7 @@
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             gap: 12px;
             margin-bottom: 15px;
         }
@@ -76,6 +75,23 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+        .btn-admin {
+            background: #2563EB;
+            border: 1px solid #38BDF8;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            border-bottom: 3px solid #1e4bb3;
+            box-shadow: 0 5px 10px rgba(37, 99, 235, 0.5);
+            transition: all 0.2s;
+        }
+        .btn-admin:hover {
+            background: #1e4bb3;
+            transform: translateY(-1px);
+        }
+        .btn-admin:active { transform: translateY(2px); border-bottom-width: 1px; }
         .lock-icon { font-size: 2rem; text-align: center; margin-bottom: 10px; }
         .code-input {
             width: 100%;
@@ -116,6 +132,17 @@
             cursor: not-allowed;
             background: #475569;
             border-bottom-color: #1E293B;
+        }
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #38BDF8;
+            color: #38BDF8;
+            padding: 12px 20px;
+            border-radius: 60px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
         }
         .file-area {
             background: #1E293B;
@@ -173,6 +200,75 @@
         }
         footer { text-align: center; color: #94A3B8; margin-top: 15px; }
         
+        .admin-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .admin-content {
+            background: #0F172A;
+            border-radius: 40px;
+            padding: 25px 20px;
+            border: 1px solid #2563EB;
+            margin: 20px auto;
+            max-width: 600px;
+        }
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .btn-close {
+            background: #2563EB;
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+        .code-item {
+            background: #1E293B;
+            border-radius: 30px;
+            padding: 18px;
+            margin-bottom: 15px;
+            border: 1px solid #38BDF8;
+        }
+        .btn-small {
+            padding: 10px 18px;
+            border-radius: 40px;
+            border: none;
+            font-weight: 600;
+            margin: 5px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: 0.2s;
+        }
+        .btn-green { background: #10b981; color: white; }
+        .btn-red { background: #ef4444; color: white; }
+        .btn-blue { background: #2563EB; color: white; }
+        .input-admin {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 40px;
+            border: none;
+            background: #1E293B;
+            color: white;
+            border: 1px solid #2563EB;
+        }
+        .flex-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
         .permanent-lock {
             text-align: center;
             padding: 30px;
@@ -182,6 +278,18 @@
         }
         .permanent-lock h2 { color: #38BDF8; font-size: 2rem; margin-bottom: 20px; }
         .permanent-lock p { color: #E5E7EB; }
+        .return-btn {
+            background: #38BDF8;
+            color: #0F172A;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -191,6 +299,7 @@
                 <div class="logo">
                     <h1>🔧 FIX HOLOPRINT</h1>
                 </div>
+                <button class="btn-admin" onclick="openAdmin()">👑 لوحة الإدارة</button>
             </div>
 
             <div id="lockScreen">
@@ -202,10 +311,9 @@
 
             <div id="permanentLockScreen" style="display: none;">
                 <div class="permanent-lock">
-                    <h2>🔒 كود غير صحيح</h2>
-                    <p>الكود الذي أدخلته غير موجود</p>
-                    <p>يرجى التأكد والمحاولة مرة أخرى</p>
-                    <div style="margin-top: 30px; font-size: 3rem;">🚫</div>
+                    <h2 id="lockTitle">🔒 انتهى الكود</h2>
+                    <p id="lockMessage">هذا الكود استخدم وانتهت مرات استخدامه</p>
+                    <button class="return-btn" onclick="returnToMain()">العودة للصفحة الرئيسية</button>
                 </div>
             </div>
 
@@ -216,7 +324,7 @@
                     <div id="fileName" class="badge">لم يتم اختيار ملف</div>
                 </div>
                 <button class="btn-primary" id="processBtn" disabled>🔧 معالجة وإصلاح الملف</button>
-                <div id="processMessage" class="message"></div>
+                <div id="processMessage" class="message" style="display: none;"></div> <!-- الرسائل مخفية -->
             </div>
 
             <a href="https://discord.gg/cqQvSshdt" target="_blank" class="discord-link">💬 دعم فني عبر Discord</a>
@@ -224,122 +332,369 @@
         </div>
     </div>
 
+    <div id="adminPanel" class="admin-panel">
+        <div class="admin-content">
+            <div class="admin-header">
+                <h2 style="color: #38BDF8;">👑 لوحة التحكم</h2>
+                <button class="btn-close" onclick="closeAdmin()">×</button>
+            </div>
+            <div id="adminLogin">
+                <input type="password" id="adminPass" class="input-admin" placeholder="كلمة المرور">
+                <button class="btn-primary" onclick="checkAdminPass()">دخول</button>
+            </div>
+            <div id="adminContent" style="display: none;">
+                <div style="margin: 20px 0;">
+                    <h3 style="color: #38BDF8; margin-bottom: 15px;">➕ إضافة كود جديد</h3>
+                    <input type="text" id="newCode" class="input-admin" placeholder="الكود (مثال: ABC-123)">
+                    <select id="codeType" class="input-admin">
+                        <option value="unlimited">غير محدود</option>
+                        <option value="limited">محدود</option>
+                    </select>
+                    <input type="number" id="usesCount" class="input-admin" placeholder="عدد الاستخدامات (للمحدود)" value="3" min="1">
+                    <button class="btn-primary" onclick="addCode()">إضافة الكود</button>
+                </div>
+                <div style="margin: 20px 0;">
+                    <h3 style="color: #38BDF8; margin-bottom: 15px;">📋 قائمة الأكواد</h3>
+                    <div id="codesList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script>
-        // ==================== الأكواد الثابتة (قابلة للتعديل يدوياً) ====================
-        const CODES_LIST = [
-            {
-                "code": "Hhh",
-                "type": "unlimited",
-                "usesLeft": null,
-                "active": true,
-                "deviceBound": null
-            },
-            {
-                "code": "TEST-123",
-                "type": "limited",
-                "usesLeft": 3,
-                "active": true,
-                "deviceBound": null
-            },
-            {
-                "code": "VIP-2025",
-                "type": "limited",
-                "usesLeft": 1,
-                "active": true,
-                "deviceBound": null
-            }
+        // ==================== إدارة الأكواد (مع localStorage) ====================
+        const STORAGE_KEY = 'holoprint_codes_list';
+        const LOCKED_KEY = 'holoprint_permanent_lock';
+        const ADMIN_PASSWORD = '3alloch';
+
+        // الأكواد الافتراضية (تظهر إذا لم يكن هناك شيء في localStorage)
+        const DEFAULT_CODES = [
+            { code: 'FIX-MAIN-001', type: 'unlimited', usesLeft: null, active: true, deviceBound: null },
+            { code: 'TEST-1234', type: 'limited', usesLeft: 2, active: true, deviceBound: null },
+            { code: 'HOLO-2025', type: 'unlimited', usesLeft: null, active: true, deviceBound: null }
         ];
 
-        // مفاتيح التخزين المحلي
-        const STORAGE_KEY = 'holoprint_device_id';
-        const USAGE_KEY_PREFIX = 'code_usage_';  // لكل كود، سنخزن عدد الاستخدامات المتبقية
-        const LOCKED_KEY = 'holoprint_permanent_lock'; // قفل شامل (إذا انتهى كود محدود نهائياً)
-
-        function getDeviceId() {
-            let deviceId = localStorage.getItem(STORAGE_KEY);
-            if (!deviceId) {
-                deviceId = 'dev_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
-                localStorage.setItem(STORAGE_KEY, deviceId);
-            }
-            return deviceId;
-        }
-
-        // تحميل حالة الاستخدامات من localStorage (لكل كود على حدة)
-        function loadUsageForCode(codeObj) {
-            if (codeObj.type !== 'limited') return null; // غير محدود لا يحتاج تخزين
-            const key = USAGE_KEY_PREFIX + codeObj.code;
-            const stored = localStorage.getItem(key);
-            if (stored !== null) {
-                return parseInt(stored, 10);
+        // تحميل الأكواد من localStorage
+        function loadCodes() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                try { return JSON.parse(stored); } catch { return DEFAULT_CODES; }
             } else {
-                // أول مرة: نستخدم usesLeft الأصلي
-                return codeObj.usesLeft;
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_CODES));
+                return DEFAULT_CODES;
             }
         }
 
-        // حفظ الاستخدامات المتبقية لكود محدود
-        function saveUsageForCode(codeObj, remainingUses) {
-            if (codeObj.type !== 'limited') return;
-            const key = USAGE_KEY_PREFIX + codeObj.code;
-            localStorage.setItem(key, remainingUses.toString());
+        function saveCodes(codes) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(codes));
         }
 
-        // دالة التحقق من الكود (تأخذ الكود المدخل وتعيد النتيجة)
+        function isPermanentlyLocked() {
+            return localStorage.getItem(LOCKED_KEY) === 'true';
+        }
+
+        function setPermanentLock(value) {
+            localStorage.setItem(LOCKED_KEY, value ? 'true' : 'false');
+        }
+
+        // التحقق من الكود
         function validateCode(inputCode) {
-            // التحقق من القفل الدائم (إذا كان هناك كود محدود انتهى نهائياً)
-            if (localStorage.getItem(LOCKED_KEY) === 'true') {
-                return { success: false, message: '🔒 هذا الكود استخدم وانتهى نهائياً', permanentLock: true };
+            if (isPermanentlyLocked()) {
+                return { success: false, message: '🔒 تم قفل الموقع نهائياً', permanentLock: true };
             }
-
+            const codes = loadCodes();
+            const deviceId = localStorage.getItem('device_id') || generateDeviceId();
             const normalizedInput = inputCode.trim().toUpperCase();
-            const deviceId = getDeviceId();
-
-            // البحث عن الكود في القائمة الثابتة
-            const found = CODES_LIST.find(c => c.code.toUpperCase() === normalizedInput && c.active === true);
-            if (!found) {
-                return { success: false, message: '❌ كود غير صالح أو معطل' };
-            }
-
-            // إذا كان الكود مرتبط بجهاز معين
+            const found = codes.find(c => c.code.toUpperCase() === normalizedInput && c.active === true);
+            if (!found) return { success: false, message: '❌ كود غير صالح' };
             if (found.deviceBound && found.deviceBound !== deviceId) {
                 return { success: false, message: '⚠️ هذا الكود مقيد بجهاز آخر' };
             }
-
-            // إذا كان الكود من نوع limited، نتحقق من الاستخدامات المتبقية
-            if (found.type === 'limited') {
-                const remaining = loadUsageForCode(found);
-                if (remaining <= 0) {
-                    return { success: false, message: '❌ انتهت استخدامات هذا الكود' };
-                }
-                // ربط الجهاز إذا لم يكن مرتبطاً
-                if (!found.deviceBound) {
-                    found.deviceBound = deviceId;
-                }
-                // نمرر الكائن مع الاستخدامات الحالية
-                return { success: true, codeObject: found, remainingUses: remaining, message: '✅ تم الفتح بنجاح' };
-            } else {
-                // unlimited
-                if (!found.deviceBound) {
-                    found.deviceBound = deviceId;
-                }
-                return { success: true, codeObject: found, remainingUses: null, message: '✅ تم الفتح بنجاح' };
+            if (!found.deviceBound) {
+                found.deviceBound = deviceId;
+                saveCodes(codes);
             }
+            if (found.type === 'limited' && found.usesLeft <= 0) {
+                return { success: false, message: '❌ انتهت استخدامات هذا الكود' };
+            }
+            return { success: true, codeObject: found, message: '✅ تم الفتح بنجاح' };
         }
 
-        // استهلاك استخدام (للمحدود)
+        function generateDeviceId() {
+            const id = 'dev_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+            localStorage.setItem('device_id', id);
+            return id;
+        }
+
         function consumeUse(codeObj) {
-            if (codeObj.type !== 'limited') return false; // غير محدود لا يستهلك
-            const currentRemaining = loadUsageForCode(codeObj);
-            if (currentRemaining > 0) {
-                const newRemaining = currentRemaining - 1;
-                saveUsageForCode(codeObj, newRemaining);
-                if (newRemaining === 0) {
-                    localStorage.setItem(LOCKED_KEY, 'true'); // قفل دائم لهذا الجهاز
-                    return true; // كان آخر استخدام
+            if (codeObj.type === 'limited' && codeObj.usesLeft > 0) {
+                codeObj.usesLeft -= 1;
+                const wasLastUse = (codeObj.usesLeft === 0);
+                const codes = loadCodes();
+                const updated = codes.map(c => c.code === codeObj.code ? codeObj : c);
+                saveCodes(updated);
+                if (wasLastUse) {
+                    setPermanentLock(true);
+                    return true;
                 }
             }
             return false;
+        }
+
+        let currentCode = null;
+
+        // ==================== واجهة المستخدم ====================
+        window.addEventListener('load', function() {
+            if (isPermanentlyLocked()) {
+                showPermanentLock('🔒 انتهى الكود', 'هذا الكود استخدم وانتهت مرات استخدامه');
+            }
+        });
+
+        function showPermanentLock(title, message) {
+            document.getElementById('lockScreen').style.display = 'none';
+            document.getElementById('processScreen').style.display = 'none';
+            document.getElementById('permanentLockScreen').style.display = 'block';
+            document.getElementById('lockTitle').innerText = title;
+            document.getElementById('lockMessage').innerText = message;
+        }
+
+        function returnToMain() {
+            setPermanentLock(false); // إعادة تعيين القفل
+            document.getElementById('permanentLockScreen').style.display = 'none';
+            document.getElementById('lockScreen').style.display = 'block';
+            document.getElementById('codeInput').value = '';
+            document.getElementById('unlockMessage').style.display = 'none';
+        }
+
+        document.getElementById('unlockBtn').addEventListener('click', function() {
+            const code = document.getElementById('codeInput').value;
+            const result = validateCode(code);
+            const msgDiv = document.getElementById('unlockMessage');
+            msgDiv.style.display = 'block';
+            msgDiv.innerText = result.message;
+            if (result.success) {
+                currentCode = result.codeObject;
+                document.getElementById('lockScreen').style.display = 'none';
+                document.getElementById('processScreen').style.display = 'block';
+            } else if (result.permanentLock) {
+                showPermanentLock('🔒 مغلق نهائياً', 'تم استنفاذ الكود ولا يمكن العودة');
+            } else {
+                // كود غير صالح - نعيد المحاولة
+                msgDiv.style.display = 'block';
+            }
+        });
+
+        // ==================== معالجة الملف (بدون رسائل) ====================
+        const packFile = document.getElementById('packFile');
+        const fileNameSpan = document.getElementById('fileName');
+        const processBtn = document.getElementById('processBtn');
+        const processMessage = document.getElementById('processMessage');
+
+        let selectedFile = null;
+
+        packFile.addEventListener('change', function(e) {
+            if (e.target.files[0]) {
+                selectedFile = e.target.files[0];
+                fileNameSpan.innerText = `📁 ${selectedFile.name}`;
+                processBtn.disabled = false;
+            } else {
+                selectedFile = null;
+                fileNameSpan.innerText = 'لم يتم اختيار ملف';
+                processBtn.disabled = true;
+            }
+        });
+
+        function handleDownload(resultBlob, resultName) {
+            if (!resultBlob) return;
+            var fixedBlob = new Blob([resultBlob], { type: "application/octet-stream" });
+            var url = URL.createObjectURL(fixedBlob);
+            var a = document.createElement("a");
+            a.href = url;
+            var filename = resultName;
+            if (filename.endsWith(".mcpack.zip")) filename = filename.replace(".mcpack.zip", ".mcpack");
+            if (!filename.endsWith(".mcpack")) filename = filename.replace(/\.(zip)$/i, ".mcpack");
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        processBtn.addEventListener('click', async function() {
+            if (!currentCode) {
+                alert('الرجاء فتح القفل أولاً');
+                return;
+            }
+            if (!selectedFile) {
+                alert('❌ لم تختر ملف');
+                return;
+            }
+            processMessage.style.display = 'none'; // إخفاء أي رسائل سابقة
+
+            try {
+                const JSZip = window.JSZip;
+                const zip = new JSZip();
+                const content = await selectedFile.arrayBuffer();
+                const zipData = await zip.loadAsync(content);
+
+                // تعديل armor_stand.entity.json
+                for (let filename in zipData.files) {
+                    if (filename.includes('armor_stand.entity.json')) {
+                        const file = zipData.files[filename];
+                        let text = await file.async('string');
+                        text = text.replace(/"default":"armor_stand"/g, '"default":"leash_knot"');
+                        text = text.replace(/"identifier":"minecraft:armor_stand"/g, '"identifier":"minecraft:leash_knot"');
+                        zipData.file(filename, text);
+                    }
+                }
+
+                // تعديل manifest.json
+                for (let filename in zipData.files) {
+                    if (filename.includes('manifest.json')) {
+                        const file = zipData.files[filename];
+                        let manifestContent = await file.async('string');
+                        manifestContent = manifestContent.replace(
+                            /("name"\s*:\s*")(.*?)(")/g,
+                            function(match, prefix, name, suffix) {
+                                if (name.includes('Kelp Farm (1)') && !name.includes('§4§l(fixed)')) {
+                                    return prefix + name + ' §4§l(fixed)' + suffix;
+                                }
+                                return match;
+                            }
+                        );
+                        zipData.file(filename, manifestContent);
+                        break;
+                    }
+                }
+
+                // استبدال الصورة
+                const iconBase64 = await generateFixIconBase64();
+                if (iconBase64) {
+                    for (let filename in zipData.files) {
+                        if (filename.includes('pack_icon.png') || filename.includes('Icon.jpg') || filename.includes('icon.png')) {
+                            zipData.remove(filename);
+                        }
+                    }
+                    const iconData = atob(iconBase64);
+                    const iconArray = new Uint8Array(iconData.length);
+                    for (let i = 0; i < iconData.length; i++) iconArray[i] = iconData.charCodeAt(i);
+                    zipData.file('pack_icon.png', iconArray);
+                }
+
+                // إنشاء الملف الجديد
+                const newZip = await zipData.generateAsync({ type: 'blob' });
+                const originalName = selectedFile.name;
+                const baseName = originalName.replace(/\.mcpack$|\.zip$/i, '');
+                const newName = `${baseName}_fixed.mcpack`;
+                handleDownload(newZip, newName);
+
+                const wasLastUse = consumeUse(currentCode);
+                if (wasLastUse) {
+                    showPermanentLock('🔒 انتهى الكود', 'لقد استخدمت آخر مرة من هذا الكود');
+                } else {
+                    // لا نعرض أي رسالة نجاح
+                }
+
+            } catch (err) {
+                console.error('خطأ في المعالجة:', err);
+                alert('حدث خطأ أثناء المعالجة: ' + err.message);
+            }
+        });
+
+        // ==================== لوحة الإدارة ====================
+        function openAdmin() {
+            document.getElementById('adminPanel').style.display = 'block';
+            document.getElementById('adminLogin').style.display = 'block';
+            document.getElementById('adminContent').style.display = 'none';
+            document.getElementById('adminPass').value = '';
+        }
+
+        function closeAdmin() {
+            document.getElementById('adminPanel').style.display = 'none';
+        }
+
+        function checkAdminPass() {
+            const pass = document.getElementById('adminPass').value;
+            if (pass === ADMIN_PASSWORD) {
+                document.getElementById('adminLogin').style.display = 'none';
+                document.getElementById('adminContent').style.display = 'block';
+                refreshCodesList();
+            } else {
+                alert('❌ كلمة مرور خاطئة');
+            }
+        }
+
+        function refreshCodesList() {
+            const codes = loadCodes();
+            const listDiv = document.getElementById('codesList');
+            listDiv.innerHTML = '';
+            codes.forEach((code) => {
+                const div = document.createElement('div');
+                div.className = 'code-item';
+                div.innerHTML = `
+                    <div style="font-size: 1.2rem; color: #38BDF8; margin-bottom: 10px;">${code.code}</div>
+                    <div>النوع: ${code.type === 'unlimited' ? 'غير محدود' : 'محدود'}</div>
+                    <div>الاستخدامات: ${code.usesLeft !== null ? code.usesLeft : '∞'}</div>
+                    <div>الحالة: ${code.active ? '✅ نشط' : '❌ معطل'}</div>
+                    <div>الجهاز: ${code.deviceBound ? 'مرتبط' : 'غير مرتبط'}</div>
+                    <div class="flex-row">
+                        <button class="btn-small btn-green" onclick="toggleCode('${code.code}')">${code.active ? 'تعطيل' : 'تفعيل'}</button>
+                        ${code.type === 'limited' ? `<button class="btn-small btn-blue" onclick="resetUses('${code.code}')">إعادة تعيين</button>` : ''}
+                        <button class="btn-small btn-red" onclick="deleteCode('${code.code}')">🗑️ حذف</button>
+                    </div>
+                `;
+                listDiv.appendChild(div);
+            });
+        }
+
+        function addCode() {
+            const newCode = document.getElementById('newCode').value.trim().toUpperCase();
+            const type = document.getElementById('codeType').value;
+            const uses = document.getElementById('usesCount').value;
+            if (!newCode) { alert('الرجاء إدخال الكود'); return; }
+            const codes = loadCodes();
+            if (codes.find(c => c.code === newCode)) { alert('هذا الكود موجود مسبقاً'); return; }
+            codes.push({
+                code: newCode,
+                type: type,
+                usesLeft: type === 'limited' ? parseInt(uses) : null,
+                active: true,
+                deviceBound: null
+            });
+            saveCodes(codes);
+            refreshCodesList();
+            document.getElementById('newCode').value = '';
+        }
+
+        function toggleCode(codeStr) {
+            if (confirm('تغيير حالة الكود؟')) {
+                const codes = loadCodes();
+                const code = codes.find(c => c.code === codeStr);
+                if (code) { code.active = !code.active; saveCodes(codes); refreshCodesList(); }
+            }
+        }
+
+        function resetUses(codeStr) {
+            const newUses = prompt('أدخل عدد الاستخدامات الجديد:');
+            if (newUses !== null) {
+                const codes = loadCodes();
+                const code = codes.find(c => c.code === codeStr);
+                if (code && code.type === 'limited') {
+                    code.usesLeft = parseInt(newUses);
+                    saveCodes(codes);
+                    refreshCodesList();
+                }
+            }
+        }
+
+        function deleteCode(codeStr) {
+            if (confirm('⚠️ هل أنت متأكد من حذف هذا الكود؟')) {
+                const codes = loadCodes();
+                const newCodes = codes.filter(c => c.code !== codeStr);
+                saveCodes(newCodes);
+                refreshCodesList();
+            }
         }
 
         function generateFixIconBase64() {
@@ -371,205 +726,6 @@
                 resolve(base64);
             });
         }
-
-        let currentCodeObject = null;
-        let currentRemainingUses = null;
-
-        window.addEventListener('load', function() {
-            if (localStorage.getItem(LOCKED_KEY) === 'true') {
-                document.getElementById('lockScreen').style.display = 'none';
-                document.getElementById('permanentLockScreen').style.display = 'block';
-                document.querySelector('.permanent-lock h2').innerText = '🔒 مغلق نهائياً';
-                document.querySelector('.permanent-lock p').innerHTML = 'هذا الكود استخدم وانتهى<br>لا يمكن استخدامه مرة أخرى';
-            }
-        });
-
-        document.getElementById('unlockBtn').addEventListener('click', function() {
-            const code = document.getElementById('codeInput').value;
-            const result = validateCode(code);
-            const msgDiv = document.getElementById('unlockMessage');
-            msgDiv.style.display = 'block';
-            msgDiv.innerText = result.message;
-
-            if (result.success) {
-                currentCodeObject = result.codeObject;
-                currentRemainingUses = result.remainingUses;
-                document.getElementById('lockScreen').style.display = 'none';
-                document.getElementById('processScreen').style.display = 'block';
-            } else if (result.permanentLock) {
-                document.getElementById('lockScreen').style.display = 'none';
-                document.getElementById('permanentLockScreen').style.display = 'block';
-                document.querySelector('.permanent-lock h2').innerText = '🔒 مغلق نهائياً';
-                document.querySelector('.permanent-lock p').innerHTML = 'هذا الكود استخدم وانتهى<br>لا يمكن استخدامه مرة أخرى';
-            } else {
-                // كود غير صحيح: نعرض رسالة الخطأ مؤقتاً ثم نعود
-                document.getElementById('lockScreen').style.display = 'none';
-                document.getElementById('permanentLockScreen').style.display = 'block';
-                document.querySelector('.permanent-lock h2').innerText = '❌ كود خاطئ';
-                document.querySelector('.permanent-lock p').innerHTML = 'الكود الذي أدخلته غير صحيح<br>سيتم إعادة التوجيه بعد 3 ثوانٍ';
-                setTimeout(() => {
-                    document.getElementById('permanentLockScreen').style.display = 'none';
-                    document.getElementById('lockScreen').style.display = 'block';
-                    document.getElementById('codeInput').value = '';
-                    msgDiv.style.display = 'none';
-                }, 3000);
-            }
-        });
-
-        // ==================== معالجة الملف ====================
-        const packFile = document.getElementById('packFile');
-        const fileNameSpan = document.getElementById('fileName');
-        const processBtn = document.getElementById('processBtn');
-        const processMessage = document.getElementById('processMessage');
-
-        let selectedFile = null;
-
-        packFile.addEventListener('change', function(e) {
-            if (e.target.files[0]) {
-                selectedFile = e.target.files[0];
-                fileNameSpan.innerText = `📁 ${selectedFile.name}`;
-                processBtn.disabled = false;
-            } else {
-                selectedFile = null;
-                fileNameSpan.innerText = 'لم يتم اختيار ملف';
-                processBtn.disabled = true;
-            }
-        });
-
-        function handleDownload(resultBlob, resultName) {
-            if (!resultBlob) return;
-            var fixedBlob = new Blob([resultBlob], { type: "application/octet-stream" });
-            var url = URL.createObjectURL(fixedBlob);
-            var a = document.createElement("a");
-            a.href = url;
-            var filename = resultName;
-            if (filename.endsWith(".mcpack.zip")) {
-                filename = filename.replace(".mcpack.zip", ".mcpack");
-            }
-            if (!filename.endsWith(".mcpack")) {
-                filename = filename.replace(/\.(zip)$/i, ".mcpack");
-            }
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        processBtn.addEventListener('click', async function() {
-            if (!currentCodeObject) {
-                alert('الرجاء فتح القفل أولاً');
-                return;
-            }
-            if (!selectedFile) {
-                processMessage.innerText = '❌ لم تختر ملف';
-                return;
-            }
-            processMessage.innerText = '⏳ جاري المعالجة...';
-
-            try {
-                const JSZip = window.JSZip;
-                const zip = new JSZip();
-                const content = await selectedFile.arrayBuffer();
-                const zipData = await zip.loadAsync(content);
-
-                let changesMade = [];
-
-                // تعديل armor_stand.entity.json
-                let modified = false;
-                for (let filename in zipData.files) {
-                    if (filename.includes('armor_stand.entity.json')) {
-                        const file = zipData.files[filename];
-                        let text = await file.async('string');
-                        const originalText = text;
-
-                        text = text.replace(/"default":"armor_stand"/g, '"default":"leash_knot"');
-                        text = text.replace(/"identifier":"minecraft:armor_stand"/g, '"identifier":"minecraft:leash_knot"');
-
-                        if (text !== originalText) {
-                            zipData.file(filename, text);
-                            modified = true;
-                            changesMade.push('✅ تم تعديل armor_stand.entity.json');
-                        }
-                    }
-                }
-
-                if (!modified) {
-                    changesMade.push('⚠️ لم يتم العثور على ملف armor_stand.entity.json داخل الحزمة');
-                }
-
-                // تعديل manifest.json
-                for (let filename in zipData.files) {
-                    if (filename.includes('manifest.json')) {
-                        const file = zipData.files[filename];
-                        let manifestContent = await file.async('string');
-                        const originalManifest = manifestContent;
-                        manifestContent = manifestContent.replace(
-                            /("name"\s*:\s*")(.*?)(")/g,
-                            function(match, prefix, name, suffix) {
-                                if (name.includes('Kelp Farm (1)') && !name.includes('§4§l(fixed)')) {
-                                    return prefix + name + ' §4§l(fixed)' + suffix;
-                                }
-                                return match;
-                            }
-                        );
-                        if (manifestContent !== originalManifest) {
-                            zipData.file(filename, manifestContent);
-                            changesMade.push('✅ تم تعديل manifest.json');
-                        }
-                        break;
-                    }
-                }
-
-                // استبدال الصورة بصورة FIX
-                processMessage.innerText = '⏳ جاري إنشاء صورة FIX...';
-                const iconBase64 = await generateFixIconBase64();
-                if (iconBase64) {
-                    for (let filename in zipData.files) {
-                        if (filename.includes('pack_icon.png') || filename.includes('Icon.jpg') || filename.includes('icon.png')) {
-                            zipData.remove(filename);
-                        }
-                    }
-                    const iconData = atob(iconBase64);
-                    const iconArray = new Uint8Array(iconData.length);
-                    for (let i = 0; i < iconData.length; i++) {
-                        iconArray[i] = iconData.charCodeAt(i);
-                    }
-                    zipData.file('pack_icon.png', iconArray);
-                    changesMade.push('✅ تم استبدال صورة الحزمة');
-                }
-
-                // إنشاء الملف الجديد
-                const newZip = await zipData.generateAsync({ type: 'blob' });
-                const originalName = selectedFile.name;
-                const baseName = originalName.replace(/\.mcpack$|\.zip$/i, '');
-                let newName = `${baseName}_fixed.mcpack`;
-
-                handleDownload(newZip, newName);
-
-                // استهلاك استخدام للكود إذا كان محدوداً
-                const wasLastUse = consumeUse(currentCodeObject);
-
-                let resultMessage = changesMade.join('\n') + '\n\n';
-                if (wasLastUse) {
-                    resultMessage += '✅ تمت المعالجة! هذا كان آخر استخدام للكود. سيتم إغلاق الموقع.';
-                    processMessage.innerText = resultMessage;
-                    setTimeout(() => {
-                        document.getElementById('processScreen').style.display = 'none';
-                        document.getElementById('permanentLockScreen').style.display = 'block';
-                        document.querySelector('.permanent-lock h2').innerText = '🔒 مغلق نهائياً';
-                        document.querySelector('.permanent-lock p').innerHTML = 'هذا الكود استخدم وانتهى<br>لا يمكن استخدامه مرة أخرى';
-                    }, 5000);
-                } else {
-                    resultMessage += '✅ تمت المعالجة بنجاح! تم تحميل الملف المعدل.';
-                    processMessage.innerText = resultMessage;
-                }
-
-            } catch (err) {
-                console.error('خطأ في المعالجة:', err);
-                processMessage.innerText = `❌ خطأ: ${err.message}\n\nتفاصيل إضافية في وحدة التحكم (F12 > Console)`;
-            }
-        });
     </script>
 </body>
 </html>

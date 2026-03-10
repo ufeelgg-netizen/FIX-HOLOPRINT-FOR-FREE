@@ -324,27 +324,6 @@
             opacity: 0.7;
             background: #2d1a1a;
         }
-        .permanent-lock {
-            text-align: center;
-            padding: 30px;
-            background: #1E293B;
-            border-radius: 40px;
-            border: 2px solid #2563EB;
-        }
-        .permanent-lock h2 { color: #38BDF8; font-size: 2rem; margin-bottom: 20px; }
-        .permanent-lock p { color: #E5E7EB; margin-bottom: 20px; }
-        .return-btn {
-            background: #38BDF8;
-            color: #0F172A;
-            border: none;
-            padding: 15px 25px;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 1.2rem;
-            cursor: pointer;
-            margin-top: 20px;
-            width: 100%;
-        }
         .copy-message {
             position: fixed;
             bottom: 20px;
@@ -375,6 +354,7 @@
                 <button class="btn-admin" onclick="openAdmin()">👑 لوحة الإدارة</button>
             </div>
 
+            <!-- الشاشة الرئيسية (تظهر دائماً) -->
             <div id="mainScreen">
                 <div class="info-box">
                     <div>رقم جهازك</div>
@@ -389,15 +369,7 @@
                 <div id="errorMessage" class="message" style="display: none;"></div>
             </div>
 
-            <div id="blockedScreen" style="display: none;">
-                <div class="permanent-lock">
-                    <h2 id="blockTitle">🚫 لا توجد صلاحية</h2>
-                    <p id="blockMessage">لا يوجد تذاكر استخدام، يجب التواصل عبر الديسكورد</p>
-                    <a href="https://discord.gg/cqQvSshdt" target="_blank" class="discord-link" style="margin-top: 20px;">💬 الدعم الفني</a>
-                    <button class="return-btn" onclick="location.reload()">إعادة المحاولة</button>
-                </div>
-            </div>
-
+            <!-- شاشة المعالجة -->
             <div id="processScreen" style="display: none;">
                 <div class="file-area">
                     <input type="file" id="packFile" accept=".mcpack,.zip" style="display: none;">
@@ -409,7 +381,7 @@
             </div>
 
             <a href="https://discord.gg/cqQvSshdt" target="_blank" class="discord-link">💬 دعم فني عبر Discord</a>
-            <footer>تم التطوير بواسطة @hurleyxyz · الإصدار 0.1.1</footer>
+            <footer>تم التطوير بواسطة @hurleyxyz · الإصدار 10.0</footer>
         </div>
     </div>
 
@@ -547,9 +519,6 @@
             const remainingSpan = document.getElementById('remainingDisplay');
             const statusSpan = document.getElementById('statusDisplay');
             const startBtn = document.getElementById('startBtn');
-            const mainScreen = document.getElementById('mainScreen');
-            const blockedScreen = document.getElementById('blockedScreen');
-            const processScreen = document.getElementById('processScreen');
 
             deviceIdSpan.innerText = access.deviceId;
 
@@ -562,21 +531,19 @@
                 }
                 statusSpan.innerText = '✅ مسموح';
                 statusSpan.className = 'status-badge status-allowed';
-                mainScreen.style.display = 'block';
-                blockedScreen.style.display = 'none';
-                processScreen.style.display = 'none';
+                startBtn.disabled = false;
+                startBtn.style.opacity = '1';
             } else {
-                // عرض رسالة عدم الصلاحية (لا تذاكر)
-                // نستخدم نفس شاشة المنع مع النص المناسب
+                // عرض رسالة عدم الصلاحية
+                remainingSpan.innerHTML = '<span class="no-tickets">لا يوجد تذاكر استخدام، يجب التواصل عبر الديسكورد</span>';
                 if (access.blocked) {
-                    document.getElementById('blockTitle').innerText = '🚫 جهاز محظور';
+                    statusSpan.innerText = '🚫 محظور';
                 } else {
-                    document.getElementById('blockTitle').innerText = '🚫 لا توجد صلاحية';
+                    statusSpan.innerText = '🚫 ممنوع';
                 }
-                document.getElementById('blockMessage').innerHTML = 'لا يوجد تذاكر استخدام، يجب التواصل عبر الديسكورد';
-                mainScreen.style.display = 'none';
-                blockedScreen.style.display = 'block';
-                processScreen.style.display = 'none';
+                statusSpan.className = 'status-badge status-blocked';
+                startBtn.disabled = true;
+                startBtn.style.opacity = '0.5';
             }
         }
 
@@ -593,7 +560,7 @@
                     alert('حدث خطأ في استهلاك الرصيد');
                 }
             } else {
-                updateMainScreen(); // يعيد التوجيه إلى شاشة المنع
+                updateMainScreen(); // للتأكيد
             }
         });
 

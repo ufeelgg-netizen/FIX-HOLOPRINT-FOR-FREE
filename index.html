@@ -100,6 +100,7 @@
             color: #E5E7EB;
             border: 2px solid #2563EB;
             margin: 20px 0;
+            position: relative;
         }
         .device-id {
             font-size: 2rem;
@@ -107,6 +108,31 @@
             color: #38BDF8;
             margin: 10px 0;
             direction: ltr;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .copy-btn {
+            background: #2563EB;
+            border: none;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .remaining-display {
+            font-size: 1.5rem;
+            margin: 10px 0;
+        }
+        .no-tickets {
+            color: #ef4444;
+            font-weight: bold;
+            margin: 10px 0;
         }
         .status-badge {
             display: inline-block;
@@ -148,17 +174,6 @@
             cursor: not-allowed;
             background: #475569;
             border-bottom-color: #1E293B;
-        }
-        .btn-secondary {
-            background: transparent;
-            border: 2px solid #38BDF8;
-            color: #38BDF8;
-            padding: 12px 20px;
-            border-radius: 60px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            margin: 10px 0;
         }
         .file-area {
             background: #1E293B;
@@ -252,25 +267,7 @@
             font-size: 1.8rem;
             cursor: pointer;
         }
-        .device-item {
-            background: #1E293B;
-            border-radius: 30px;
-            padding: 18px;
-            margin-bottom: 15px;
-            border: 1px solid #38BDF8;
-        }
-        .btn-small {
-            padding: 8px 15px;
-            border-radius: 40px;
-            border: none;
-            font-weight: 600;
-            margin: 5px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .btn-green { background: #10b981; color: white; }
-        .btn-red { background: #ef4444; color: white; }
-        .input-admin {
+        .search-box {
             width: 100%;
             padding: 15px;
             margin: 10px 0;
@@ -280,9 +277,51 @@
             color: white;
             border: 1px solid #2563EB;
         }
-        .flex-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+        .device-item {
+            background: #1E293B;
+            border-radius: 30px;
+            padding: 18px;
+            margin-bottom: 15px;
+            border: 1px solid #38BDF8;
+        }
+        .device-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .device-id-small {
+            font-size: 1.2rem;
+            color: #38BDF8;
+            direction: ltr;
+        }
+        .btn-small {
+            padding: 8px 12px;
+            border-radius: 30px;
+            border: none;
+            font-weight: 600;
+            margin: 3px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+        }
+        .btn-green { background: #10b981; color: white; }
+        .btn-red { background: #ef4444; color: white; }
+        .btn-blue { background: #2563EB; color: white; }
+        .btn-purple { background: #8b5cf6; color: white; }
+        .input-admin {
+            width: 100%;
+            padding: 12px;
+            margin: 5px 0;
+            border-radius: 30px;
+            border: none;
+            background: #1E293B;
+            color: white;
+            border: 1px solid #2563EB;
+        }
+        .flex-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
         .blocked {
-            opacity: 0.6;
+            opacity: 0.7;
             background: #2d1a1a;
         }
         .permanent-lock {
@@ -293,7 +332,7 @@
             border: 2px solid #2563EB;
         }
         .permanent-lock h2 { color: #38BDF8; font-size: 2rem; margin-bottom: 20px; }
-        .permanent-lock p { color: #E5E7EB; }
+        .permanent-lock p { color: #E5E7EB; margin-bottom: 20px; }
         .return-btn {
             background: #38BDF8;
             color: #0F172A;
@@ -305,6 +344,24 @@
             cursor: pointer;
             margin-top: 20px;
             width: 100%;
+        }
+        .copy-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #10b981;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            z-index: 2000;
+            animation: fadeInOut 2s ease;
+        }
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            85% { opacity: 1; }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
         }
     </style>
 </head>
@@ -321,7 +378,11 @@
             <div id="mainScreen">
                 <div class="info-box">
                     <div>رقم جهازك</div>
-                    <div id="deviceIdDisplay" class="device-id">--</div>
+                    <div class="device-id">
+                        <span id="deviceIdDisplay">--</span>
+                        <button class="copy-btn" onclick="copyCurrentDeviceId()" title="نسخ المعرف">📋 نسخ</button>
+                    </div>
+                    <div id="remainingDisplay" class="remaining-display"></div>
                     <div id="statusDisplay" class="status-badge"></div>
                 </div>
                 <button class="btn-primary" id="startBtn">بدء المعالجة</button>
@@ -330,8 +391,9 @@
 
             <div id="blockedScreen" style="display: none;">
                 <div class="permanent-lock">
-                    <h2 id="blockTitle">🚫 جهاز محظور</h2>
-                    <p id="blockMessage">تم حظر هذا الجهاز من قبل الإدارة</p>
+                    <h2 id="blockTitle">🚫 لا توجد صلاحية</h2>
+                    <p id="blockMessage">لا يوجد تذاكر استخدام، يجب التواصل عبر الديسكورد</p>
+                    <a href="https://discord.gg/cqQvSshdt" target="_blank" class="discord-link" style="margin-top: 20px;">💬 الدعم الفني</a>
                     <button class="return-btn" onclick="location.reload()">إعادة المحاولة</button>
                 </div>
             </div>
@@ -362,6 +424,7 @@
                 <button class="btn-primary" onclick="checkAdminPass()">دخول</button>
             </div>
             <div id="adminContent" style="display: none;">
+                <input type="text" id="searchInput" class="search-box" placeholder="🔍 بحث برقم الجهاز..." onkeyup="filterDevices()">
                 <div style="margin: 20px 0;">
                     <h3 style="color: #38BDF8; margin-bottom: 15px;">📱 الأجهزة المسجلة</h3>
                     <div id="devicesList"></div>
@@ -372,30 +435,28 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script>
-        // ==================== إدارة الأجهزة (بدون حد مرات) ====================
-        const DEVICES_KEY = 'holoprint_devices';
-        const NEXT_ID_KEY = 'holoprint_next_id';
+        // ==================== إدارة الأجهزة (معرف 8 أرقام عشوائي ورصيد = 0 للمستخدم الجديد) ====================
+        const DEVICES_KEY = 'holoprint_devices_v2';
         const ADMIN_PASSWORD = '3alloch';
 
-        // الحصول على معرف الجهاز (رقم تسلسلي)
-        function getDeviceId() {
-            let deviceId = localStorage.getItem('holoprint_device_number');
-            if (!deviceId) {
-                // نحتاج إلى رقم جديد غير مستخدم
-                let nextId = localStorage.getItem(NEXT_ID_KEY);
-                if (!nextId) {
-                    nextId = 1;
-                } else {
-                    nextId = parseInt(nextId) + 1;
-                }
-                localStorage.setItem(NEXT_ID_KEY, nextId);
-                deviceId = nextId;
-                localStorage.setItem('holoprint_device_number', deviceId);
-            }
-            return parseInt(deviceId);
+        // توليد معرف 8 أرقام عشوائي
+        function generateDeviceId() {
+            return Math.floor(10000000 + Math.random() * 90000000).toString();
         }
 
-        // هيكل الجهاز: { id (رقم), blocked, lastSeen }
+        // الحصول على معرف الجهاز (يُخزن في localStorage)
+        function getDeviceId() {
+            let deviceId = localStorage.getItem('holoprint_device_id_v2');
+            if (!deviceId) {
+                deviceId = generateDeviceId();
+                localStorage.setItem('holoprint_device_id_v2', deviceId);
+                // تسجيل الجهاز الجديد (برصيد 0)
+                registerNewDevice(deviceId, 0);
+            }
+            return deviceId;
+        }
+
+        // هيكل الجهاز: { id, remainingUses (number or null for unlimited), lastSeen, blocked }
         function loadDevices() {
             const stored = localStorage.getItem(DEVICES_KEY);
             if (stored) {
@@ -408,40 +469,71 @@
             localStorage.setItem(DEVICES_KEY, JSON.stringify(devices));
         }
 
-        // تسجيل أو تحديث الجهاز الحالي
-        function registerCurrentDevice() {
-            const deviceNumber = getDeviceId();
+        // تسجيل جهاز جديد برصيد محدد (افتراضي 0)
+        function registerNewDevice(deviceId, initialUses = 0) {
             const devices = loadDevices();
-            if (!devices[deviceNumber]) {
-                // جهاز جديد
-                devices[deviceNumber] = {
-                    id: deviceNumber,
+            if (!devices[deviceId]) {
+                devices[deviceId] = {
+                    id: deviceId,
+                    remainingUses: initialUses,
                     lastSeen: new Date().toISOString(),
                     blocked: false
                 };
                 saveDevices(devices);
-            } else {
-                // تحديث تاريخ الظهور
-                devices[deviceNumber].lastSeen = new Date().toISOString();
+            }
+            return devices[deviceId];
+        }
+
+        // تحديث آخر ظهور
+        function updateDeviceLastSeen(deviceId) {
+            const devices = loadDevices();
+            if (devices[deviceId]) {
+                devices[deviceId].lastSeen = new Date().toISOString();
                 saveDevices(devices);
             }
-            return devices[deviceNumber];
         }
 
         // التحقق من إمكانية الوصول
         function checkAccess() {
-            const deviceNumber = getDeviceId();
+            const deviceId = getDeviceId();
             const devices = loadDevices();
-            const device = devices[deviceNumber];
+            const device = devices[deviceId];
             if (!device) {
-                // جهاز غير مسجل (يحدث لأول مرة) - نسجله و نسمح له
-                registerCurrentDevice();
-                return { allowed: true, blocked: false, deviceId: deviceNumber };
+                // جهاز غير مسجل (نادر) - نسجله بـ 0
+                registerNewDevice(deviceId, 0);
+                return { allowed: false, blocked: false, remaining: 0, unlimited: false, deviceId };
             }
+            // تحديث آخر ظهور
+            device.lastSeen = new Date().toISOString();
+            saveDevices(devices);
+
             if (device.blocked) {
-                return { allowed: false, blocked: true, deviceId: deviceNumber };
+                return { allowed: false, blocked: true, remaining: device.remainingUses, unlimited: device.remainingUses === null, deviceId };
             }
-            return { allowed: true, blocked: false, deviceId: deviceNumber };
+            if (device.remainingUses !== null && device.remainingUses <= 0) {
+                return { allowed: false, blocked: false, remaining: 0, unlimited: false, deviceId };
+            }
+            return { allowed: true, blocked: false, remaining: device.remainingUses, unlimited: device.remainingUses === null, deviceId };
+        }
+
+        // استهلاك مرة (إذا كان محدوداً)
+        function consumeUse() {
+            const deviceId = getDeviceId();
+            const devices = loadDevices();
+            const device = devices[deviceId];
+            if (!device) return false;
+            if (device.blocked) return false;
+            if (device.remainingUses === null) {
+                // غير محدود: لا ننقص
+                return true;
+            }
+            if (device.remainingUses > 0) {
+                device.remainingUses -= 1;
+                device.lastSeen = new Date().toISOString();
+                saveDevices(devices);
+                return true;
+            }
+            return false;
         }
 
         // ==================== واجهة المستخدم ====================
@@ -452,6 +544,7 @@
         function updateMainScreen() {
             const access = checkAccess();
             const deviceIdSpan = document.getElementById('deviceIdDisplay');
+            const remainingSpan = document.getElementById('remainingDisplay');
             const statusSpan = document.getElementById('statusDisplay');
             const startBtn = document.getElementById('startBtn');
             const mainScreen = document.getElementById('mainScreen');
@@ -461,16 +554,26 @@
             deviceIdSpan.innerText = access.deviceId;
 
             if (access.allowed) {
+                // عرض الرصيد
+                if (access.unlimited) {
+                    remainingSpan.innerHTML = 'الرصيد: <span class="unlimited-badge">غير محدود ∞</span>';
+                } else {
+                    remainingSpan.innerHTML = `الرصيد المتبقي: <strong>${access.remaining}</strong>`;
+                }
                 statusSpan.innerText = '✅ مسموح';
                 statusSpan.className = 'status-badge status-allowed';
                 mainScreen.style.display = 'block';
                 blockedScreen.style.display = 'none';
                 processScreen.style.display = 'none';
             } else {
-                statusSpan.innerText = '🚫 محظور';
-                statusSpan.className = 'status-badge status-blocked';
-                document.getElementById('blockTitle').innerText = '🚫 جهاز محظور';
-                document.getElementById('blockMessage').innerText = 'تم حظر هذا الجهاز من قبل الإدارة';
+                // عرض رسالة عدم الصلاحية (لا تذاكر)
+                // نستخدم نفس شاشة المنع مع النص المناسب
+                if (access.blocked) {
+                    document.getElementById('blockTitle').innerText = '🚫 جهاز محظور';
+                } else {
+                    document.getElementById('blockTitle').innerText = '🚫 لا توجد صلاحية';
+                }
+                document.getElementById('blockMessage').innerHTML = 'لا يوجد تذاكر استخدام، يجب التواصل عبر الديسكورد';
                 mainScreen.style.display = 'none';
                 blockedScreen.style.display = 'block';
                 processScreen.style.display = 'none';
@@ -480,13 +583,25 @@
         document.getElementById('startBtn').addEventListener('click', function() {
             const access = checkAccess();
             if (access.allowed) {
-                // الانتقال إلى شاشة المعالجة
-                document.getElementById('mainScreen').style.display = 'none';
-                document.getElementById('processScreen').style.display = 'block';
+                // استهلاك مرة (إذا كان محدوداً)
+                const consumed = consumeUse();
+                if (consumed) {
+                    // الانتقال إلى شاشة المعالجة
+                    document.getElementById('mainScreen').style.display = 'none';
+                    document.getElementById('processScreen').style.display = 'block';
+                } else {
+                    alert('حدث خطأ في استهلاك الرصيد');
+                }
             } else {
                 updateMainScreen(); // يعيد التوجيه إلى شاشة المنع
             }
         });
+
+        // نسخ معرف الجهاز الحالي
+        window.copyCurrentDeviceId = function() {
+            const deviceId = getDeviceId();
+            copyToClipboard(deviceId, 'تم نسخ معرف الجهاز');
+        };
 
         // ==================== معالجة الملف (بدون رسائل) ====================
         const packFile = document.getElementById('packFile');
@@ -591,8 +706,8 @@
                 // بعد المعالجة، نعود إلى الشاشة الرئيسية
                 document.getElementById('processScreen').style.display = 'none';
                 document.getElementById('mainScreen').style.display = 'block';
-                // تحديث وقت آخر ظهور للجهاز
-                registerCurrentDevice();
+                // تحديث واجهة الرصيد
+                updateMainScreen();
 
             } catch (err) {
                 console.error('خطأ في المعالجة:', err);
@@ -622,33 +737,77 @@
             }
         }
 
+        let allDevices = [];
         function refreshDevicesList() {
             const devices = loadDevices();
+            allDevices = Object.values(devices);
+            filterDevices(); // يعرض الكل مبدئياً
+        }
+
+        function filterDevices() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allDevices.filter(d => d.id.toLowerCase().includes(searchTerm));
+            renderDevices(filtered);
+        }
+
+        function renderDevices(devicesArray) {
             const listDiv = document.getElementById('devicesList');
             listDiv.innerHTML = '';
-            const deviceArray = Object.values(devices);
-            if (deviceArray.length === 0) {
-                listDiv.innerHTML = '<div class="message">لا توجد أجهزة مسجلة بعد</div>';
+            if (devicesArray.length === 0) {
+                listDiv.innerHTML = '<div class="message">لا توجد أجهزة مطابقة</div>';
                 return;
             }
-            deviceArray.sort((a, b) => new Date(b.lastSeen) - new Date(a.lastSeen));
-            deviceArray.forEach(device => {
+            devicesArray.sort((a, b) => new Date(b.lastSeen) - new Date(a.lastSeen));
+            devicesArray.forEach(device => {
                 const div = document.createElement('div');
                 div.className = `device-item ${device.blocked ? 'blocked' : ''}`;
+                const remainingText = device.remainingUses === null ? 'غير محدود ∞' : device.remainingUses;
                 div.innerHTML = `
-                    <div style="font-size: 1.2rem; color: #38BDF8; margin-bottom: 8px;">🔢 رقم الجهاز: ${device.id}</div>
+                    <div class="device-header">
+                        <span class="device-id-small">🆔 ${device.id}</span>
+                        <button class="btn-small btn-purple" onclick="copyDeviceId('${device.id}')">📋 نسخ</button>
+                    </div>
                     <div>📅 آخر ظهور: ${new Date(device.lastSeen).toLocaleString('ar-EG')}</div>
+                    <div>🔢 الرصيد: <strong>${remainingText}</strong></div>
                     <div>🚫 الحالة: ${device.blocked ? 'محظور' : 'نشط'}</div>
                     <div class="flex-row" style="margin-top: 10px;">
-                        <button class="btn-small ${device.blocked ? 'btn-green' : 'btn-red'}" onclick="toggleBlock(${device.id})">
+                        <button class="btn-small btn-blue" onclick="editRemaining('${device.id}')">تعديل الرصيد</button>
+                        <button class="btn-small ${device.blocked ? 'btn-green' : 'btn-red'}" onclick="toggleBlock('${device.id}')">
                             ${device.blocked ? 'رفع الحظر' : 'حظر'}
                         </button>
-                        <button class="btn-small btn-red" onclick="deleteDevice(${device.id})">🗑️ حذف</button>
+                        <button class="btn-small btn-red" onclick="deleteDevice('${device.id}')">🗑️ حذف</button>
                     </div>
                 `;
                 listDiv.appendChild(div);
             });
         }
+
+        window.copyDeviceId = function(deviceId) {
+            copyToClipboard(deviceId, 'تم نسخ معرف الجهاز');
+        };
+
+        window.editRemaining = function(deviceId) {
+            const newValue = prompt('أدخل الرصيد الجديد (أدخل رقمًا أو كلمة "unlimited" للرصيد غير المحدود):');
+            if (newValue === null) return;
+            const devices = loadDevices();
+            if (!devices[deviceId]) return;
+            if (newValue.toLowerCase() === 'unlimited') {
+                devices[deviceId].remainingUses = null;
+            } else {
+                const num = parseInt(newValue);
+                if (isNaN(num) || num < 0) {
+                    alert('الرجاء إدخال رقم صحيح أو كلمة "unlimited"');
+                    return;
+                }
+                devices[deviceId].remainingUses = num;
+            }
+            saveDevices(devices);
+            refreshDevicesList();
+            // إذا كان هذا هو الجهاز الحالي، نحدث الشاشة الرئيسية
+            if (deviceId === getDeviceId()) {
+                updateMainScreen();
+            }
+        };
 
         window.toggleBlock = function(deviceId) {
             const devices = loadDevices();
@@ -656,6 +815,9 @@
                 devices[deviceId].blocked = !devices[deviceId].blocked;
                 saveDevices(devices);
                 refreshDevicesList();
+                if (deviceId === getDeviceId()) {
+                    updateMainScreen();
+                }
             }
         };
 
@@ -665,13 +827,48 @@
                 delete devices[deviceId];
                 saveDevices(devices);
                 refreshDevicesList();
-                // إذا كان الجهاز المحذوف هو الجهاز الحالي، نعيد تحميل الصفحة لتحديث المعرف
                 if (deviceId === getDeviceId()) {
-                    localStorage.removeItem('holoprint_device_number'); // إجبار على إنشاء معرف جديد
+                    localStorage.removeItem('holoprint_device_id_v2');
                     location.reload();
                 }
             }
         };
+
+        // دالة نسخ عامة مع رسالة
+        function copyToClipboard(text, message) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showCopyMessage(message);
+                }).catch(() => fallbackCopy(text, message));
+            } else {
+                fallbackCopy(text, message);
+            }
+        }
+
+        function fallbackCopy(text, message) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showCopyMessage(message);
+            } catch (err) {
+                alert('تعذر النسخ: ' + text);
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function showCopyMessage(msg) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'copy-message';
+            msgDiv.innerText = `✅ ${msg}`;
+            document.body.appendChild(msgDiv);
+            setTimeout(() => msgDiv.remove(), 2000);
+        }
 
         // ==================== دالة توليد الأيقونة ====================
         function generateFixIconBase64() {

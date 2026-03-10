@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>FIX HOLOPRINT · الإصدار المحترف</title>
-    <!-- أيقونة الموقع الجديدة -->
+    <!-- أيقونة الموقع -->
     <link rel="icon" type="image/png" href="https://image2url.com/r2/default/images/1773163753711-12a6b929-9d7b-412f-bfde-a12c7d98698d.png">
     <style>
         * {
@@ -92,21 +92,37 @@
             transform: translateY(-1px);
         }
         .btn-admin:active { transform: translateY(2px); border-bottom-width: 1px; }
-        .lock-icon { font-size: 2rem; text-align: center; margin-bottom: 10px; }
-        .code-input {
-            width: 100%;
+        .info-box {
             background: #1E293B;
-            border: 2px solid #2563EB;
-            padding: 18px 20px;
-            border-radius: 60px;
-            font-size: 1.2rem;
-            color: white;
+            border-radius: 30px;
+            padding: 20px;
             text-align: center;
-            letter-spacing: 3px;
-            outline: none;
-            margin: 15px 0;
+            color: #E5E7EB;
+            border: 2px solid #2563EB;
+            margin: 20px 0;
         }
-        .code-input::placeholder { color: #94A3B8; letter-spacing: normal; }
+        .device-id {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #38BDF8;
+            margin: 10px 0;
+            direction: ltr;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .status-allowed {
+            background: #10b981;
+            color: white;
+        }
+        .status-blocked {
+            background: #ef4444;
+            color: white;
+        }
         .btn-primary {
             width: 100%;
             background: #2563EB;
@@ -236,7 +252,7 @@
             font-size: 1.8rem;
             cursor: pointer;
         }
-        .code-item {
+        .device-item {
             background: #1E293B;
             border-radius: 30px;
             padding: 18px;
@@ -244,20 +260,16 @@
             border: 1px solid #38BDF8;
         }
         .btn-small {
-            padding: 10px 18px;
+            padding: 8px 15px;
             border-radius: 40px;
             border: none;
             font-weight: 600;
             margin: 5px;
             cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
             transition: 0.2s;
         }
         .btn-green { background: #10b981; color: white; }
         .btn-red { background: #ef4444; color: white; }
-        .btn-blue { background: #2563EB; color: white; }
         .input-admin {
             width: 100%;
             padding: 15px;
@@ -269,6 +281,10 @@
             border: 1px solid #2563EB;
         }
         .flex-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+        .blocked {
+            opacity: 0.6;
+            background: #2d1a1a;
+        }
         .permanent-lock {
             text-align: center;
             padding: 30px;
@@ -302,18 +318,21 @@
                 <button class="btn-admin" onclick="openAdmin()">👑 لوحة الإدارة</button>
             </div>
 
-            <div id="lockScreen">
-                <div class="lock-icon">🔒</div>
-                <input type="text" id="codeInput" class="code-input" placeholder="أدخل كود الفتح" maxlength="20">
-                <button class="btn-primary" id="unlockBtn">فتح القفل</button>
-                <div id="unlockMessage" class="message" style="display: none;"></div>
+            <div id="mainScreen">
+                <div class="info-box">
+                    <div>رقم جهازك</div>
+                    <div id="deviceIdDisplay" class="device-id">--</div>
+                    <div id="statusDisplay" class="status-badge"></div>
+                </div>
+                <button class="btn-primary" id="startBtn">بدء المعالجة</button>
+                <div id="errorMessage" class="message" style="display: none;"></div>
             </div>
 
-            <div id="permanentLockScreen" style="display: none;">
+            <div id="blockedScreen" style="display: none;">
                 <div class="permanent-lock">
-                    <h2 id="lockTitle">🔒 انتهى الكود</h2>
-                    <p id="lockMessage">هذا الكود استخدم وانتهت مرات استخدامه</p>
-                    <button class="return-btn" onclick="returnToMain()">العودة للصفحة الرئيسية</button>
+                    <h2 id="blockTitle">🚫 جهاز محظور</h2>
+                    <p id="blockMessage">تم حظر هذا الجهاز من قبل الإدارة</p>
+                    <button class="return-btn" onclick="location.reload()">إعادة المحاولة</button>
                 </div>
             </div>
 
@@ -324,18 +343,18 @@
                     <div id="fileName" class="badge">لم يتم اختيار ملف</div>
                 </div>
                 <button class="btn-primary" id="processBtn" disabled>🔧 معالجة وإصلاح الملف</button>
-                <div id="processMessage" class="message" style="display: none;"></div> <!-- الرسائل مخفية -->
+                <div id="processMessage" class="message" style="display: none;"></div>
             </div>
 
             <a href="https://discord.gg/cqQvSshdt" target="_blank" class="discord-link">💬 دعم فني عبر Discord</a>
-            <footer>تم التطوير بواسطة @hurleyxyz · الإصدار 5.0</footer>
+            <footer>تم التطوير بواسطة @hurleyxyz · الإصدار 7.0</footer>
         </div>
     </div>
 
     <div id="adminPanel" class="admin-panel">
         <div class="admin-content">
             <div class="admin-header">
-                <h2 style="color: #38BDF8;">👑 لوحة التحكم</h2>
+                <h2 style="color: #38BDF8;">👑 إدارة الأجهزة</h2>
                 <button class="btn-close" onclick="closeAdmin()">×</button>
             </div>
             <div id="adminLogin">
@@ -344,18 +363,8 @@
             </div>
             <div id="adminContent" style="display: none;">
                 <div style="margin: 20px 0;">
-                    <h3 style="color: #38BDF8; margin-bottom: 15px;">➕ إضافة كود جديد</h3>
-                    <input type="text" id="newCode" class="input-admin" placeholder="الكود (مثال: ABC-123)">
-                    <select id="codeType" class="input-admin">
-                        <option value="unlimited">غير محدود</option>
-                        <option value="limited">محدود</option>
-                    </select>
-                    <input type="number" id="usesCount" class="input-admin" placeholder="عدد الاستخدامات (للمحدود)" value="3" min="1">
-                    <button class="btn-primary" onclick="addCode()">إضافة الكود</button>
-                </div>
-                <div style="margin: 20px 0;">
-                    <h3 style="color: #38BDF8; margin-bottom: 15px;">📋 قائمة الأكواد</h3>
-                    <div id="codesList"></div>
+                    <h3 style="color: #38BDF8; margin-bottom: 15px;">📱 الأجهزة المسجلة</h3>
+                    <div id="devicesList"></div>
                 </div>
             </div>
         </div>
@@ -363,125 +372,119 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script>
-        // ==================== إدارة الأكواد (مع localStorage) ====================
-        const STORAGE_KEY = 'holoprint_codes_list';
-        const LOCKED_KEY = 'holoprint_permanent_lock';
+        // ==================== إدارة الأجهزة (بدون حد مرات) ====================
+        const DEVICES_KEY = 'holoprint_devices';
+        const NEXT_ID_KEY = 'holoprint_next_id';
         const ADMIN_PASSWORD = '3alloch';
 
-        // الأكواد الافتراضية (تظهر إذا لم يكن هناك شيء في localStorage)
-        const DEFAULT_CODES = [
-            { code: 'FIX-MAIN-001', type: 'unlimited', usesLeft: null, active: true, deviceBound: null },
-            { code: 'TEST-1234', type: 'limited', usesLeft: 2, active: true, deviceBound: null },
-            { code: 'HOLO-2025', type: 'unlimited', usesLeft: null, active: true, deviceBound: null }
-        ];
-
-        // تحميل الأكواد من localStorage
-        function loadCodes() {
-            const stored = localStorage.getItem(STORAGE_KEY);
-            if (stored) {
-                try { return JSON.parse(stored); } catch { return DEFAULT_CODES; }
-            } else {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_CODES));
-                return DEFAULT_CODES;
-            }
-        }
-
-        function saveCodes(codes) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(codes));
-        }
-
-        function isPermanentlyLocked() {
-            return localStorage.getItem(LOCKED_KEY) === 'true';
-        }
-
-        function setPermanentLock(value) {
-            localStorage.setItem(LOCKED_KEY, value ? 'true' : 'false');
-        }
-
-        // التحقق من الكود
-        function validateCode(inputCode) {
-            if (isPermanentlyLocked()) {
-                return { success: false, message: '🔒 تم قفل الموقع نهائياً', permanentLock: true };
-            }
-            const codes = loadCodes();
-            const deviceId = localStorage.getItem('device_id') || generateDeviceId();
-            const normalizedInput = inputCode.trim().toUpperCase();
-            const found = codes.find(c => c.code.toUpperCase() === normalizedInput && c.active === true);
-            if (!found) return { success: false, message: '❌ كود غير صالح' };
-            if (found.deviceBound && found.deviceBound !== deviceId) {
-                return { success: false, message: '⚠️ هذا الكود مقيد بجهاز آخر' };
-            }
-            if (!found.deviceBound) {
-                found.deviceBound = deviceId;
-                saveCodes(codes);
-            }
-            if (found.type === 'limited' && found.usesLeft <= 0) {
-                return { success: false, message: '❌ انتهت استخدامات هذا الكود' };
-            }
-            return { success: true, codeObject: found, message: '✅ تم الفتح بنجاح' };
-        }
-
-        function generateDeviceId() {
-            const id = 'dev_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
-            localStorage.setItem('device_id', id);
-            return id;
-        }
-
-        function consumeUse(codeObj) {
-            if (codeObj.type === 'limited' && codeObj.usesLeft > 0) {
-                codeObj.usesLeft -= 1;
-                const wasLastUse = (codeObj.usesLeft === 0);
-                const codes = loadCodes();
-                const updated = codes.map(c => c.code === codeObj.code ? codeObj : c);
-                saveCodes(updated);
-                if (wasLastUse) {
-                    setPermanentLock(true);
-                    return true;
+        // الحصول على معرف الجهاز (رقم تسلسلي)
+        function getDeviceId() {
+            let deviceId = localStorage.getItem('holoprint_device_number');
+            if (!deviceId) {
+                // نحتاج إلى رقم جديد غير مستخدم
+                let nextId = localStorage.getItem(NEXT_ID_KEY);
+                if (!nextId) {
+                    nextId = 1;
+                } else {
+                    nextId = parseInt(nextId) + 1;
                 }
+                localStorage.setItem(NEXT_ID_KEY, nextId);
+                deviceId = nextId;
+                localStorage.setItem('holoprint_device_number', deviceId);
             }
-            return false;
+            return parseInt(deviceId);
         }
 
-        let currentCode = null;
+        // هيكل الجهاز: { id (رقم), blocked, lastSeen }
+        function loadDevices() {
+            const stored = localStorage.getItem(DEVICES_KEY);
+            if (stored) {
+                try { return JSON.parse(stored); } catch { return {}; }
+            }
+            return {};
+        }
+
+        function saveDevices(devices) {
+            localStorage.setItem(DEVICES_KEY, JSON.stringify(devices));
+        }
+
+        // تسجيل أو تحديث الجهاز الحالي
+        function registerCurrentDevice() {
+            const deviceNumber = getDeviceId();
+            const devices = loadDevices();
+            if (!devices[deviceNumber]) {
+                // جهاز جديد
+                devices[deviceNumber] = {
+                    id: deviceNumber,
+                    lastSeen: new Date().toISOString(),
+                    blocked: false
+                };
+                saveDevices(devices);
+            } else {
+                // تحديث تاريخ الظهور
+                devices[deviceNumber].lastSeen = new Date().toISOString();
+                saveDevices(devices);
+            }
+            return devices[deviceNumber];
+        }
+
+        // التحقق من إمكانية الوصول
+        function checkAccess() {
+            const deviceNumber = getDeviceId();
+            const devices = loadDevices();
+            const device = devices[deviceNumber];
+            if (!device) {
+                // جهاز غير مسجل (يحدث لأول مرة) - نسجله و نسمح له
+                registerCurrentDevice();
+                return { allowed: true, blocked: false, deviceId: deviceNumber };
+            }
+            if (device.blocked) {
+                return { allowed: false, blocked: true, deviceId: deviceNumber };
+            }
+            return { allowed: true, blocked: false, deviceId: deviceNumber };
+        }
 
         // ==================== واجهة المستخدم ====================
         window.addEventListener('load', function() {
-            if (isPermanentlyLocked()) {
-                showPermanentLock('🔒 انتهى الكود', 'هذا الكود استخدم وانتهت مرات استخدامه');
-            }
+            updateMainScreen();
         });
 
-        function showPermanentLock(title, message) {
-            document.getElementById('lockScreen').style.display = 'none';
-            document.getElementById('processScreen').style.display = 'none';
-            document.getElementById('permanentLockScreen').style.display = 'block';
-            document.getElementById('lockTitle').innerText = title;
-            document.getElementById('lockMessage').innerText = message;
-        }
+        function updateMainScreen() {
+            const access = checkAccess();
+            const deviceIdSpan = document.getElementById('deviceIdDisplay');
+            const statusSpan = document.getElementById('statusDisplay');
+            const startBtn = document.getElementById('startBtn');
+            const mainScreen = document.getElementById('mainScreen');
+            const blockedScreen = document.getElementById('blockedScreen');
+            const processScreen = document.getElementById('processScreen');
 
-        function returnToMain() {
-            setPermanentLock(false); // إعادة تعيين القفل
-            document.getElementById('permanentLockScreen').style.display = 'none';
-            document.getElementById('lockScreen').style.display = 'block';
-            document.getElementById('codeInput').value = '';
-            document.getElementById('unlockMessage').style.display = 'none';
-        }
+            deviceIdSpan.innerText = access.deviceId;
 
-        document.getElementById('unlockBtn').addEventListener('click', function() {
-            const code = document.getElementById('codeInput').value;
-            const result = validateCode(code);
-            const msgDiv = document.getElementById('unlockMessage');
-            msgDiv.style.display = 'block';
-            msgDiv.innerText = result.message;
-            if (result.success) {
-                currentCode = result.codeObject;
-                document.getElementById('lockScreen').style.display = 'none';
-                document.getElementById('processScreen').style.display = 'block';
-            } else if (result.permanentLock) {
-                showPermanentLock('🔒 مغلق نهائياً', 'تم استنفاذ الكود ولا يمكن العودة');
+            if (access.allowed) {
+                statusSpan.innerText = '✅ مسموح';
+                statusSpan.className = 'status-badge status-allowed';
+                mainScreen.style.display = 'block';
+                blockedScreen.style.display = 'none';
+                processScreen.style.display = 'none';
             } else {
-                // كود غير صالح - نعيد المحاولة
-                msgDiv.style.display = 'block';
+                statusSpan.innerText = '🚫 محظور';
+                statusSpan.className = 'status-badge status-blocked';
+                document.getElementById('blockTitle').innerText = '🚫 جهاز محظور';
+                document.getElementById('blockMessage').innerText = 'تم حظر هذا الجهاز من قبل الإدارة';
+                mainScreen.style.display = 'none';
+                blockedScreen.style.display = 'block';
+                processScreen.style.display = 'none';
+            }
+        }
+
+        document.getElementById('startBtn').addEventListener('click', function() {
+            const access = checkAccess();
+            if (access.allowed) {
+                // الانتقال إلى شاشة المعالجة
+                document.getElementById('mainScreen').style.display = 'none';
+                document.getElementById('processScreen').style.display = 'block';
+            } else {
+                updateMainScreen(); // يعيد التوجيه إلى شاشة المنع
             }
         });
 
@@ -522,15 +525,11 @@
         }
 
         processBtn.addEventListener('click', async function() {
-            if (!currentCode) {
-                alert('الرجاء فتح القفل أولاً');
-                return;
-            }
             if (!selectedFile) {
                 alert('❌ لم تختر ملف');
                 return;
             }
-            processMessage.style.display = 'none'; // إخفاء أي رسائل سابقة
+            processMessage.style.display = 'none'; // إخفاء الرسائل
 
             try {
                 const JSZip = window.JSZip;
@@ -589,12 +588,11 @@
                 const newName = `${baseName}_fixed.mcpack`;
                 handleDownload(newZip, newName);
 
-                const wasLastUse = consumeUse(currentCode);
-                if (wasLastUse) {
-                    showPermanentLock('🔒 انتهى الكود', 'لقد استخدمت آخر مرة من هذا الكود');
-                } else {
-                    // لا نعرض أي رسالة نجاح
-                }
+                // بعد المعالجة، نعود إلى الشاشة الرئيسية
+                document.getElementById('processScreen').style.display = 'none';
+                document.getElementById('mainScreen').style.display = 'block';
+                // تحديث وقت آخر ظهور للجهاز
+                registerCurrentDevice();
 
             } catch (err) {
                 console.error('خطأ في المعالجة:', err);
@@ -607,7 +605,6 @@
             document.getElementById('adminPanel').style.display = 'block';
             document.getElementById('adminLogin').style.display = 'block';
             document.getElementById('adminContent').style.display = 'none';
-            document.getElementById('adminPass').value = '';
         }
 
         function closeAdmin() {
@@ -619,84 +616,64 @@
             if (pass === ADMIN_PASSWORD) {
                 document.getElementById('adminLogin').style.display = 'none';
                 document.getElementById('adminContent').style.display = 'block';
-                refreshCodesList();
+                refreshDevicesList();
             } else {
                 alert('❌ كلمة مرور خاطئة');
             }
         }
 
-        function refreshCodesList() {
-            const codes = loadCodes();
-            const listDiv = document.getElementById('codesList');
+        function refreshDevicesList() {
+            const devices = loadDevices();
+            const listDiv = document.getElementById('devicesList');
             listDiv.innerHTML = '';
-            codes.forEach((code) => {
+            const deviceArray = Object.values(devices);
+            if (deviceArray.length === 0) {
+                listDiv.innerHTML = '<div class="message">لا توجد أجهزة مسجلة بعد</div>';
+                return;
+            }
+            deviceArray.sort((a, b) => new Date(b.lastSeen) - new Date(a.lastSeen));
+            deviceArray.forEach(device => {
                 const div = document.createElement('div');
-                div.className = 'code-item';
+                div.className = `device-item ${device.blocked ? 'blocked' : ''}`;
                 div.innerHTML = `
-                    <div style="font-size: 1.2rem; color: #38BDF8; margin-bottom: 10px;">${code.code}</div>
-                    <div>النوع: ${code.type === 'unlimited' ? 'غير محدود' : 'محدود'}</div>
-                    <div>الاستخدامات: ${code.usesLeft !== null ? code.usesLeft : '∞'}</div>
-                    <div>الحالة: ${code.active ? '✅ نشط' : '❌ معطل'}</div>
-                    <div>الجهاز: ${code.deviceBound ? 'مرتبط' : 'غير مرتبط'}</div>
-                    <div class="flex-row">
-                        <button class="btn-small btn-green" onclick="toggleCode('${code.code}')">${code.active ? 'تعطيل' : 'تفعيل'}</button>
-                        ${code.type === 'limited' ? `<button class="btn-small btn-blue" onclick="resetUses('${code.code}')">إعادة تعيين</button>` : ''}
-                        <button class="btn-small btn-red" onclick="deleteCode('${code.code}')">🗑️ حذف</button>
+                    <div style="font-size: 1.2rem; color: #38BDF8; margin-bottom: 8px;">🔢 رقم الجهاز: ${device.id}</div>
+                    <div>📅 آخر ظهور: ${new Date(device.lastSeen).toLocaleString('ar-EG')}</div>
+                    <div>🚫 الحالة: ${device.blocked ? 'محظور' : 'نشط'}</div>
+                    <div class="flex-row" style="margin-top: 10px;">
+                        <button class="btn-small ${device.blocked ? 'btn-green' : 'btn-red'}" onclick="toggleBlock(${device.id})">
+                            ${device.blocked ? 'رفع الحظر' : 'حظر'}
+                        </button>
+                        <button class="btn-small btn-red" onclick="deleteDevice(${device.id})">🗑️ حذف</button>
                     </div>
                 `;
                 listDiv.appendChild(div);
             });
         }
 
-        function addCode() {
-            const newCode = document.getElementById('newCode').value.trim().toUpperCase();
-            const type = document.getElementById('codeType').value;
-            const uses = document.getElementById('usesCount').value;
-            if (!newCode) { alert('الرجاء إدخال الكود'); return; }
-            const codes = loadCodes();
-            if (codes.find(c => c.code === newCode)) { alert('هذا الكود موجود مسبقاً'); return; }
-            codes.push({
-                code: newCode,
-                type: type,
-                usesLeft: type === 'limited' ? parseInt(uses) : null,
-                active: true,
-                deviceBound: null
-            });
-            saveCodes(codes);
-            refreshCodesList();
-            document.getElementById('newCode').value = '';
-        }
-
-        function toggleCode(codeStr) {
-            if (confirm('تغيير حالة الكود؟')) {
-                const codes = loadCodes();
-                const code = codes.find(c => c.code === codeStr);
-                if (code) { code.active = !code.active; saveCodes(codes); refreshCodesList(); }
+        window.toggleBlock = function(deviceId) {
+            const devices = loadDevices();
+            if (devices[deviceId]) {
+                devices[deviceId].blocked = !devices[deviceId].blocked;
+                saveDevices(devices);
+                refreshDevicesList();
             }
-        }
+        };
 
-        function resetUses(codeStr) {
-            const newUses = prompt('أدخل عدد الاستخدامات الجديد:');
-            if (newUses !== null) {
-                const codes = loadCodes();
-                const code = codes.find(c => c.code === codeStr);
-                if (code && code.type === 'limited') {
-                    code.usesLeft = parseInt(newUses);
-                    saveCodes(codes);
-                    refreshCodesList();
+        window.deleteDevice = function(deviceId) {
+            if (confirm('⚠️ هل أنت متأكد من حذف هذا الجهاز؟')) {
+                const devices = loadDevices();
+                delete devices[deviceId];
+                saveDevices(devices);
+                refreshDevicesList();
+                // إذا كان الجهاز المحذوف هو الجهاز الحالي، نعيد تحميل الصفحة لتحديث المعرف
+                if (deviceId === getDeviceId()) {
+                    localStorage.removeItem('holoprint_device_number'); // إجبار على إنشاء معرف جديد
+                    location.reload();
                 }
             }
-        }
+        };
 
-        function deleteCode(codeStr) {
-            if (confirm('⚠️ هل أنت متأكد من حذف هذا الكود؟')) {
-                const codes = loadCodes();
-                const newCodes = codes.filter(c => c.code !== codeStr);
-                saveCodes(newCodes);
-                refreshCodesList();
-            }
-        }
-
+        // ==================== دالة توليد الأيقونة ====================
         function generateFixIconBase64() {
             return new Promise((resolve) => {
                 const canvas = document.createElement('canvas');

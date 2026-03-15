@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>FIX HOLOPRINT · معالج الملفات</title>
-    <!-- أيقونة الموقع -->
+    <title>FIX HOLOPRINT · File Processor</title>
+    <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://image2url.com/r2/default/images/1773163753711-12a6b929-9d7b-412f-bfde-a12c7d98698d.png">
     <style>
         * {
@@ -21,7 +21,6 @@
             align-items: center;
             padding: 12px;
             margin: 0;
-            direction: rtl;
             position: relative;
             overflow-x: hidden;
         }
@@ -163,7 +162,7 @@
         .discord-icon {
             width: 24px;
             height: 24px;
-            margin-left: 10px;
+            margin-right: 10px;
             filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
         }
         
@@ -192,6 +191,11 @@
             align-items: center;
             width: 100%;
         }
+        
+        .subtitle {
+            color: #E5E7EB; 
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -200,14 +204,14 @@
             <div class="logo">
                 <h1>🔧 FIX HOLOPRINT</h1>
             </div>
-            <p style="color: #E5E7EB; margin-bottom: 20px;">أداة معالجة ملفات الهولوبرنت</p>
+            <p class="subtitle">Holoprint file processor tool</p>
 
             <div class="file-area">
                 <input type="file" id="packFile" accept=".mcpack,.zip" style="display: none;">
-                <button class="file-label" onclick="document.getElementById('packFile').click()">📦 اختيار ملف .mcpack أو .zip</button>
-                <div id="fileName" class="badge">لم يتم اختيار ملف</div>
+                <button class="file-label" onclick="document.getElementById('packFile').click()">📦 Select .mcpack or .zip file</button>
+                <div id="fileName" class="badge">No file selected</div>
             </div>
-            <button class="btn-primary" id="processBtn" disabled>🔧 معالجة وإصلاح الملف</button>
+            <button class="btn-primary" id="processBtn" disabled>🔧 Process & Fix File</button>
             <div id="processMessage" class="message"></div>
 
             <!-- Discord button - small and 3D with only "Discord" text -->
@@ -220,13 +224,13 @@
                 </a>
             </div>
             
-            <footer>تم التطوير بواسطة @hurleyxyz · الإصدار البسيط</footer>
+            <footer>Developed by @hurleyxyz · Simple version</footer>
         </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script>
-        // ==================== دالة توليد الأيقونة ====================
+        // ==================== Icon generation function ====================
         function generateFixIconBase64() {
             return new Promise((resolve) => {
                 const canvas = document.createElement('canvas');
@@ -257,7 +261,7 @@
             });
         }
 
-        // ==================== عناصر الصفحة ====================
+        // ==================== Page elements ====================
         const packFile = document.getElementById('packFile');
         const fileNameSpan = document.getElementById('fileName');
         const processBtn = document.getElementById('processBtn');
@@ -272,12 +276,12 @@
                 processBtn.disabled = false;
             } else {
                 selectedFile = null;
-                fileNameSpan.innerText = 'لم يتم اختيار ملف';
+                fileNameSpan.innerText = 'No file selected';
                 processBtn.disabled = true;
             }
         });
 
-        // دالة التحميل
+        // Download function
         function handleDownload(resultBlob, resultName) {
             if (!resultBlob) return;
             var fixedBlob = new Blob([resultBlob], { type: "application/octet-stream" });
@@ -294,10 +298,10 @@
             URL.revokeObjectURL(url);
         }
 
-        // معالجة الملف
+        // File processing
         processBtn.addEventListener('click', async function() {
             if (!selectedFile) {
-                alert('❌ لم تختر ملف');
+                alert('❌ No file selected');
                 return;
             }
             processMessage.style.display = 'none';
@@ -308,7 +312,7 @@
                 const content = await selectedFile.arrayBuffer();
                 const zipData = await zip.loadAsync(content);
 
-                // تعديل armor_stand.entity.json
+                // Modify armor_stand.entity.json
                 for (let filename in zipData.files) {
                     if (filename.includes('armor_stand.entity.json')) {
                         const file = zipData.files[filename];
@@ -319,7 +323,7 @@
                     }
                 }
 
-                // تعديل manifest.json
+                // Modify manifest.json
                 for (let filename in zipData.files) {
                     if (filename.includes('manifest.json')) {
                         const file = zipData.files[filename];
@@ -338,7 +342,7 @@
                     }
                 }
 
-                // استبدال الصورة
+                // Replace icon
                 const iconBase64 = await generateFixIconBase64();
                 if (iconBase64) {
                     for (let filename in zipData.files) {
@@ -352,7 +356,7 @@
                     zipData.file('pack_icon.png', iconArray);
                 }
 
-                // إنشاء الملف الجديد
+                // Create new file
                 const newZip = await zipData.generateAsync({ type: 'blob' });
                 const originalName = selectedFile.name;
                 const baseName = originalName.replace(/\.mcpack$|\.zip$/i, '');
@@ -360,8 +364,8 @@
                 handleDownload(newZip, newName);
 
             } catch (err) {
-                console.error('خطأ في المعالجة:', err);
-                alert('حدث خطأ أثناء المعالجة: ' + err.message);
+                console.error('Processing error:', err);
+                alert('An error occurred during processing: ' + err.message);
             }
         });
     </script>
